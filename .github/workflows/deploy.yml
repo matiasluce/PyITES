@@ -1,0 +1,49 @@
+name: Desplegar en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/configure-pages@v6
+
+      # Valida el empaquetador sin instalar nada: tools/build.mjs solo usa
+      # módulos nativos de Node. Así un push con un bundle roto (por ejemplo
+      # el bug de $$ en String.replace, invisible en npm run dev) no publica.
+      - name: Comprobar que el bundle se genera
+        run: node tools/build.mjs
+
+      # Solo se publica lo que la app necesita. legacy/, tools/ y los .md
+      # se quedan en el repositorio, pero no llegan a la web.
+      - name: Preparar el sitio
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -r src _site/
+
+      - name: Publicar los archivos
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+      - name: Desplegar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

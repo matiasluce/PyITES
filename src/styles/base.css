@@ -1,0 +1,86 @@
+/* =========================================================
+   PyITES · base
+   Reinicio, tipografía global, foco, animaciones y utilidades.
+   ========================================================= */
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+html.noscroll {
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 700;
+  line-height: 1.45;
+  min-height: 100%;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------- Animaciones ---------- */
+@keyframes bob { 50% { transform: translateY(-6px); } }
+@keyframes bobx { 50% { transform: translate(-50%, -6px); } }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.08); } }
+@keyframes flick {
+  0%, 80%, 100% { transform: rotate(0); }
+  86% { transform: rotate(-10deg); }
+  92% { transform: rotate(10deg); }
+}
+@keyframes pop {
+  0% { transform: scale(0.85); opacity: 0; }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } }
+@keyframes ring { 0% { transform: scale(0.9); opacity: 0.5; } 100% { transform: scale(1.25); opacity: 0; } }
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-26px) rotate(5deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .brand span { display: none; }
+  .stat { padding: 8px 6px; font-size: 16px; }
+}

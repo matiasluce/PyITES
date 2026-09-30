@@ -1,0 +1,105 @@
+/* =========================================================
+   PyITES · tokens
+   Variables de diseño y temas. Cambia aquí los colores,
+   tipografías o espaciados de toda la aplicación.
+   ========================================================= */
+
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  --bg: #f4f8fc;
+  --card: #ffffff;
+  --line: #dfe7f0;
+  --hover: #eef3f9;
+  --text: #26364a;
+  --muted: #6c7f95;
+
+  --primary: #2f80ed;
+  --primary-d: #1e63c4;
+
+  --blue: #2f80ed;
+  --blue-soft: #e6f0fd;
+
+  --green: #58cc02;
+  --green-d: #46a302;
+  --green-soft: #e3f7cc;
+  --green-text: #3b8a00;
+
+  --red: #ff4b4b;
+  --red-d: #d63a3a;
+  --red-soft: #ffe3e3;
+  --red-text: #d13232;
+
+  --yellow: #ffd43b;
+  --yellow-d: #d9a400;
+  --orange: #ff9600;
+
+  --locked: #e4e9ef;
+  --locked-d: #c9d1db;
+  --code-bg: #f2f6fb;
+
+  /* Resaltado de sintaxis */
+  --s-k: #7c3aed;
+  --s-s: #15803d;
+  --s-c: #8a9bb0;
+  --s-n: #ea580c;
+  --s-b: #2563eb;
+  --s-d: #db2777;
+
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Tema oscuro automático según el sistema operativo */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0f1b26;
+    --card: #182735;
+    --line: #2a3f52;
+    --hover: #1f3141;
+    --text: #e7eef5;
+    --muted: #93a7ba;
+    --blue: #6aa9ff;
+    --blue-soft: #1a3552;
+    --green-soft: #1d3a12;
+    --green-text: #84e03f;
+    --red-soft: #43201f;
+    --red-text: #ff8080;
+    --locked: #2a3b4b;
+    --locked-d: #1f2e3b;
+    --code-bg: #0e1822;
+    --s-k: #c4a1ff;
+    --s-s: #7ee787;
+    --s-c: #6b8299;
+    --s-n: #ffa657;
+    --s-b: #79b8ff;
+    --s-d: #ff8ac4;
+  }
+}
+
+/* Tema oscuro forzado con <html data-theme="dark"> */
+:root[data-theme='dark'] {
+  --bg: #0f1b26;
+  --card: #182735;
+  --line: #2a3f52;
+  --hover: #1f3141;
+  --text: #e7eef5;
+  --muted: #93a7ba;
+  --blue: #6aa9ff;
+  --blue-soft: #1a3552;
+  --green-soft: #1d3a12;
+  --green-text: #84e03f;
+  --red-soft: #43201f;
+  --red-text: #ff8080;
+  --locked: #2a3b4b;
+  --locked-d: #1f2e3b;
+  --code-bg: #0e1822;
+  --s-k: #c4a1ff;
+  --s-s: #7ee787;
+  --s-c: #6b8299;
+  --s-n: #ffa657;
+  --s-b: #79b8ff;
+  --s-d: #ff8ac4;
+}

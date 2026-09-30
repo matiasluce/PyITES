@@ -1,0 +1,106 @@
+/* =========================================================
+   PyITES · layout
+   Barra superior, estructura de la pantalla de inicio y
+   pantalla de bienvenida.
+   ========================================================= */
+
+/* ---------- Barra superior ---------- */
+.topbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--bg);
+  border-bottom: 2px solid var(--line);
+}
+.tb-in {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 24px; letter-spacing: -0.02em; color: var(--primary); }
+.brand b { color: var(--yellow-d); }
+.stats { display: flex; align-items: center; gap: 2px; }
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  font-weight: 900;
+  font-size: 17px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  color: var(--text);
+}
+.stat:hover { background: var(--hover); }
+.stat.streak { color: var(--orange); }
+.stat.streak.off { color: var(--muted); }
+.stat.streak.off .fl { filter: grayscale(1); opacity: 0.6; }
+.stat.xp { color: var(--yellow-d); }
+.avatar {
+  background: var(--primary) !important;
+  color: #fff !important;
+  font-weight: 900;
+  font-size: 16px !important;
+  border-radius: 50% !important;
+  margin-left: 4px;
+}
+
+/* ---------- Estructura de inicio ---------- */
+.layout {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  padding: 20px 16px 90px;
+}
+.path { width: 100%; max-width: 560px; margin: 0 auto; }
+.side { display: none; }
+
+@media (min-width: 980px) {
+  .layout { grid-template-columns: minmax(0, 1fr) 340px; align-items: start; }
+  .side {
+    display: block;
+    position: sticky;
+    top: calc(84px + env(safe-area-inset-top, 0px));
+    max-height: calc(100vh - 110px);
+    overflow: auto;
+  }
+  .only-mobile { display: none !important; }
+}
+
+.hello { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+.hello h2 { font-size: 22px; font-weight: 900; }
+.hello p { color: var(--muted); font-size: 14px; }
+
+/* ---------- Bienvenida ---------- */
+.welcome {
+  min-height: 100vh;
+  min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 20% 10%, var(--blue-soft), transparent 45%), var(--bg);
+}
+.wbox { position: relative; z-index: 1; width: 100%; max-width: 420px; text-align: center; }
+.wbox h1 { font-size: clamp(38px, 9vw, 52px); font-weight: 900; letter-spacing: -0.03em; color: var(--primary); margin-top: 6px; }
+.wbox h1 b { color: var(--yellow-d); }
+.wbox .lead { font-size: 19px; margin: 6px 0 26px; color: var(--text); }
+.wbox .btn { width: 100%; font-size: 18px; padding: 16px; }
+.wnote { margin-top: 22px; color: var(--muted); font-size: 14px; }
+.float {
+  position: absolute;
+  font: 800 20px var(--mono);
+  color: var(--primary);
+  opacity: 0.16;
+  animation: floaty 10s ease-in-out infinite;
+  user-select: none;
+  pointer-events: none;
+}

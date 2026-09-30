@@ -1,0 +1,16 @@
+{
+  "name": "pyites",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "PyITES · Web app para aprender Python desde cero, nivel por nivel, al estilo de un juego.",
+  "keywords": ["python", "educacion", "juego", "duolingo", "aprende-python", "espanol"],
+  "scripts": {
+    "dev": "node tools/serve.mjs",
+    "start": "node tools/serve.mjs",
+    "build": "node tools/build.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

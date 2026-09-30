@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PyITES · Aprende Python jugando</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f4f8fc;--card:#ffffff;--line:#dfe7f0;--hover:#eef3f9;--text:#26364a;--muted:#6c7f95;
+  --primary:#2f80ed;--primary-d:#1e63c4;--blue:#2f80ed;--blue-soft:#e6f0fd;
+  --green:#58cc02;--green-d:#46a302;--green-soft:#e3f7cc;--green-text:#3b8a00;
+  --red:#ff4b4b;--red-d:#d63a3a;--red-soft:#ffe3e3;--red-text:#d13232;
+  --yellow:#ffd43b;--yellow-d:#d9a400;--orange:#ff9600;
+  --locked:#e4e9ef;--locked-d:#c9d1db;--code-bg:#f2f6fb;
+  --s-k:#7c3aed;--s-s:#15803d;--s-c:#8a9bb0;--s-n:#ea580c;--s-b:#2563eb;--s-d:#db2777;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1b26;--card:#182735;--line:#2a3f52;--hover:#1f3141;--text:#e7eef5;--muted:#93a7ba;
+    --blue:#6aa9ff;--blue-soft:#1a3552;
+    --green-soft:#1d3a12;--green-text:#84e03f;--red-soft:#43201f;--red-text:#ff8080;
+    --locked:#2a3b4b;--locked-d:#1f2e3b;--code-bg:#0e1822;
+    --s-k:#c4a1ff;--s-s:#7ee787;--s-c:#6b8299;--s-n:#ffa657;--s-b:#79b8ff;--s-d:#ff8ac4;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1b26;--card:#182735;--line:#2a3f52;--hover:#1f3141;--text:#e7eef5;--muted:#93a7ba;
+  --blue:#6aa9ff;--blue-soft:#1a3552;
+  --green-soft:#1d3a12;--green-text:#84e03f;--red-soft:#43201f;--red-text:#ff8080;
+  --locked:#2a3b4b;--locked-d:#1f2e3b;--code-bg:#0e1822;
+  --s-k:#c4a1ff;--s-s:#7ee787;--s-c:#6b8299;--s-n:#ffa657;--s-b:#79b8ff;--s-d:#ff8ac4;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html.noscroll{overflow:hidden}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:700;line-height:1.45;min-height:100%}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+code{font-family:var(--mono);font-size:.92em;background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.hidden{display:none!important}
+
+/* ---------- Botones ---------- */
+.btn{border:0;border-radius:16px;padding:14px 26px;font-weight:900;font-size:16px;letter-spacing:.02em;color:#fff;background:var(--primary);box-shadow:0 4px 0 var(--primary-d);transition:transform .08s,box-shadow .08s,filter .15s}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:translateY(4px);box-shadow:0 0 0 transparent}
+.btn.green{background:var(--green);box-shadow:0 4px 0 var(--green-d)}
+.btn.red{background:var(--red);box-shadow:0 4px 0 var(--red-d)}
+.btn.ghost{background:var(--card);color:var(--primary);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.btn.ghost.danger{color:var(--red-text)}
+.btn:disabled{background:var(--locked);color:var(--muted);box-shadow:0 4px 0 var(--locked-d);cursor:not-allowed;filter:none}
+.btn.wide{min-width:180px}
+.ib{border:0;background:transparent;color:var(--text);width:40px;height:40px;border-radius:12px;font-size:20px;display:grid;place-items:center;transition:background .15s}
+.ib:hover{background:var(--hover)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:18px}
+
+/* ---------- Mascota ---------- */
+.mascot{width:100%;height:auto;display:block;overflow:visible}
+.mascot-box{width:120px;flex:none;animation:bob 3.2s ease-in-out infinite}
+.mascot-box.sm{width:64px}.mascot-box.xs{width:34px;animation:none}.mascot-box.lg{width:170px}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 4.6s infinite}
+.tongue{transform-box:fill-box;transform-origin:50% 0;animation:flick 3s infinite}
+
+/* ---------- Barra superior ---------- */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:2px solid var(--line)}
+.tb-in{max-width:1000px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:24px;letter-spacing:-.02em;color:var(--primary)}
+.brand b{color:var(--yellow-d)}
+.stats{display:flex;align-items:center;gap:2px}
+.stat{display:flex;align-items:center;gap:6px;border:0;background:transparent;font-weight:900;font-size:17px;padding:8px 10px;border-radius:12px;color:var(--text)}
+.stat:hover{background:var(--hover)}
+.stat.streak{color:var(--orange)}
+.stat.streak.off{color:var(--muted)}
+.stat.streak.off .fl{filter:grayscale(1);opacity:.6}
+.stat.xp{color:var(--yellow-d)}
+.avatar{background:var(--primary)!important;color:#fff!important;font-weight:900;font-size:16px!important;border-radius:50%!important;margin-left:4px}
+
+/* ---------- Layout inicio ---------- */
+.layout{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:24px;padding:20px 16px 90px}
+.path{width:100%;max-width:560px;margin:0 auto}
+.side{display:none}
+@media (min-width:980px){
+  .layout{grid-template-columns:minmax(0,1fr) 340px;align-items:start}
+  .side{display:block;position:sticky;top:calc(84px + env(safe-area-inset-top,0px));max-height:calc(100vh - 110px);overflow:auto}
+  .only-mobile{display:none!important}
+}
+.hello{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.hello h2{font-size:22px;font-weight:900}
+.hello p{color:var(--muted);font-size:14px}
+
+.unit{--c:#58cc02;--cd:#46a302}
+.ub{background:var(--c);color:#fff;border-radius:20px;padding:16px 18px;box-shadow:0 5px 0 var(--cd);display:flex;justify-content:space-between;align-items:center;gap:12px;margin:6px 0 30px}
+.ub small{opacity:.9;font-weight:900;font-size:13px}
+.ub h3{font-size:21px;font-weight:900;line-height:1.2}
+.ub p{font-size:14px;opacity:.95}
+.ub .cnt{background:rgba(0,0,0,.16);border-radius:12px;padding:6px 10px;font-weight:900;font-size:14px;white-space:nowrap}
+.row{display:flex;flex-direction:column;align-items:center;margin-bottom:26px;transform:translateX(var(--x,0px))}
+.row.is-cur{margin-top:46px}
+.node{width:78px;height:74px;border-radius:50%;border:0;background:var(--c);box-shadow:0 7px 0 var(--cd);font-size:32px;color:#fff;position:relative;display:grid;place-items:center;transition:transform .08s,box-shadow .08s}
+.node:active{transform:translateY(5px);box-shadow:0 2px 0 var(--cd)}
+.node.locked{background:var(--locked);box-shadow:0 7px 0 var(--locked-d);color:var(--muted);font-size:26px}
+.node.locked:active{animation:shake .35s}
+.node .badge{position:absolute;right:-4px;top:-4px;width:28px;height:28px;border-radius:50%;background:var(--yellow);color:#7a5200;font-size:15px;font-weight:900;display:grid;place-items:center;border:3px solid var(--bg);box-shadow:0 2px 0 var(--yellow-d)}
+.node.cur::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:5px solid var(--c);opacity:.35;animation:ring 1.8s ease-out infinite}
+.node.just{animation:pop .6s}
+.bubble{position:absolute;top:-52px;left:50%;transform:translateX(-50%);background:var(--card);border:2px solid var(--line);color:var(--c);font-weight:900;padding:6px 14px;border-radius:14px;white-space:nowrap;animation:bobx 1.4s ease-in-out infinite;font-size:15px}
+.bubble::after{content:"";position:absolute;left:50%;bottom:-8px;width:12px;height:12px;background:var(--card);border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+.node-label{margin-top:14px;font-size:14px;font-weight:800;text-align:center;max-width:150px;color:var(--text)}
+.row.lk .node-label{color:var(--muted)}
+.finish{text-align:center;margin-top:10px}
+.finish h3{font-size:22px;margin:8px 0 4px}
+
+/* ---------- Perfil ---------- */
+.prof-top{display:flex;align-items:center;gap:14px}
+.prof-top .avatar{width:58px;height:58px;font-size:26px!important;margin:0;display:grid;place-items:center;border-radius:50%;background:var(--primary);color:#fff;font-weight:900;flex:none}
+.pname{font-size:21px;font-weight:900;display:flex;align-items:center;gap:6px;word-break:break-word}
+.ptitle{color:var(--muted);font-size:15px}
+.mini{border:0;background:var(--hover);border-radius:8px;width:28px;height:28px;font-size:13px}
+.mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.ms{border:2px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center}
+.ms b{display:block;font-size:20px;font-weight:900}
+.ms span{font-size:12px;color:var(--muted)}
+.psec{margin-top:16px}
+.psec h4{font-size:15px;font-weight:900;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+.psec h4 span{color:var(--muted);font-weight:700;font-size:13px}
+.pbar{height:14px;border-radius:99px;background:var(--line);overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:99px;background:var(--yellow);transition:width .6s}
+.pbar.g i{background:var(--green)}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.week div{font-size:12px;color:var(--muted)}
+.week span{display:grid;place-items:center;height:34px;border-radius:50%;margin-top:4px;background:var(--hover);font-size:16px;filter:grayscale(1);opacity:.5}
+.week .on span{background:#fff1d6;filter:none;opacity:1}
+.week .today span{outline:2px solid var(--primary);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.tchip{font-size:13px;padding:5px 10px;border-radius:99px;background:var(--yellow);color:#5c4100;font-weight:900}
+.tchip.lock{background:var(--locked);color:var(--muted)}
+.tchip.now{outline:3px solid var(--primary);outline-offset:1px}
+.pact{display:grid;gap:10px;margin-top:20px}
+.pact .btn{width:100%;padding:12px}
+
+/* ---------- Bienvenida ---------- */
+.welcome{min-height:100vh;min-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));display:grid;place-items:center;padding:24px;position:relative;overflow:hidden;background:radial-gradient(circle at 20% 10%,var(--blue-soft),transparent 45%),var(--bg)}
+.wbox{position:relative;z-index:1;width:100%;max-width:420px;text-align:center}
+.wbox h1{font-size:clamp(38px,9vw,52px);font-weight:900;letter-spacing:-.03em;color:var(--primary);margin-top:6px}
+.wbox h1 b{color:var(--yellow-d)}
+.wbox .lead{font-size:19px;margin:6px 0 26px;color:var(--text)}
+.field{width:100%;font:800 19px var(--sans);padding:16px 18px;border-radius:16px;border:2px solid var(--line);border-bottom-width:4px;background:var(--card);color:var(--text);outline:none;text-align:center;margin-bottom:16px}
+.field:focus{border-color:var(--primary)}
+.wbox .btn{width:100%;font-size:18px;padding:16px}
+.wnote{margin-top:22px;color:var(--muted);font-size:14px}
+.float{position:absolute;font:800 20px var(--mono);color:var(--primary);opacity:.16;animation:floaty 10s ease-in-out infinite;user-select:none;pointer-events:none}
+
+/* ---------- Lección ---------- */
+.lesson{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;animation:fadeIn .25s}
+.l-head{display:flex;align-items:center;gap:14px;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 8px;max-width:760px;width:100%;margin:0 auto}
+.l-head .x{border:0;background:transparent;font-size:22px;color:var(--muted);width:36px;height:36px;border-radius:10px}
+.l-head .x:hover{background:var(--hover)}
+.bar{flex:1;height:16px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--green);border-radius:99px;transition:width .55s cubic-bezier(.3,1.3,.5,1);position:relative}
+.bar i::after{content:"";position:absolute;left:8px;right:8px;top:4px;height:4px;border-radius:9px;background:rgba(255,255,255,.35)}
+.hearts{font-weight:900;font-size:18px;color:var(--red);min-width:52px;text-align:right}
+.hearts.hit{animation:shake .4s}
+.l-body{flex:1;overflow:auto;padding:14px 20px 28px}
+.l-inner{max-width:640px;margin:0 auto}
+.q{font-size:clamp(21px,4.6vw,27px);font-weight:900;line-height:1.3;margin:6px 0 4px}
+.tag{display:inline-block;background:var(--blue-soft);color:var(--blue);font-weight:900;font-size:13px;padding:4px 12px;border-radius:99px;margin-bottom:6px}
+.tag.warn{background:#fff1d6;color:#a86400}
+.teach{display:flex;gap:14px;align-items:flex-start;margin-top:10px}
+.speech{position:relative;flex:1;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 16px}
+.speech::before{content:"";position:absolute;left:-9px;top:26px;width:14px;height:14px;background:var(--card);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+.speech h2{font-size:21px;font-weight:900;margin-bottom:4px}
+.speech p{font-size:17px;line-height:1.55}
+@media (max-width:520px){.teach{flex-direction:column;align-items:stretch}.teach .mascot-box{align-self:flex-start;width:72px}.speech::before{left:28px;top:-9px;transform:rotate(135deg)}}
+
+.code-wrap{background:var(--code-bg);border:2px solid var(--line);border-radius:16px;overflow:hidden;margin:16px 0}
+.code-head{display:flex;gap:6px;align-items:center;padding:8px 12px;border-bottom:2px solid var(--line);font:700 12px var(--mono);color:var(--muted)}
+.code-head i{width:10px;height:10px;border-radius:50%;background:#ff5f57}
+.code-head i:nth-child(2){background:#febc2e}.code-head i:nth-child(3){background:#28c840}
+.code-head span{margin-left:6px}
+.code{margin:0;padding:14px 16px;font:600 15px/1.7 var(--mono);color:var(--text);overflow-x:auto;white-space:pre;tab-size:4}
+.code .k{color:var(--s-k);font-weight:700}.code .s{color:var(--s-s)}.code .c{color:var(--s-c);font-style:italic}
+.code .n{color:var(--s-n)}.code .b{color:var(--s-b)}.code .d{color:var(--s-d)}
+.blank{font:700 15px var(--mono);color:var(--primary);background:var(--card);border:2px dashed var(--primary);border-radius:8px;padding:1px 6px;outline:none;text-align:center;min-width:4ch}
+.blank:focus{border-style:solid}
+.blank.ok{border-color:var(--green);color:var(--green-text);border-style:solid}
+.blank.no{border-color:var(--red);color:var(--red-text);border-style:solid;animation:shake .4s}
+
+.opts{display:grid;gap:10px;margin-top:16px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-bottom-width:4px;border-radius:16px;padding:13px 16px;font-weight:800;font-size:17px;color:var(--text);transition:background .12s,border-color .12s,transform .08s}
+.opt:hover:not(:disabled){background:var(--hover)}
+.opt:active:not(:disabled){transform:translateY(2px)}
+.opt .key{width:30px;height:30px;border:2px solid var(--line);border-radius:9px;display:grid;place-items:center;font-size:14px;color:var(--muted);flex:none}
+.opt.mono .otxt{font-family:var(--mono);font-size:15px;font-weight:700}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+.opt.sel .key{border-color:var(--blue);color:var(--blue)}
+.opt.ok{border-color:var(--green);background:var(--green-soft);color:var(--green-text)}
+.opt.ok .key{border-color:var(--green);color:var(--green-text)}
+.opt.no{border-color:var(--red);background:var(--red-soft);color:var(--red-text);animation:shake .4s}
+.opt.no .key{border-color:var(--red);color:var(--red-text)}
+.opt:disabled{cursor:default}
+
+.zone{min-height:88px;margin-top:16px;padding:10px;border:2px dashed var(--line);border-radius:16px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
+.zone.ok{border-color:var(--green);background:var(--green-soft)}.zone.no{border-color:var(--red);background:var(--red-soft);animation:shake .4s}
+.zone .hint{color:var(--muted);font-size:14px;margin:auto;font-weight:700}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:22px;min-height:60px}
+.chip{font:700 15px var(--mono);white-space:pre;text-align:left;background:var(--card);border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;padding:8px 12px;color:var(--text);animation:pop .2s}
+.chip:hover{background:var(--hover)}
+.chip:disabled{cursor:default}
+
+.l-foot{border-top:2px solid var(--line);padding:16px 20px calc(16px + env(safe-area-inset-bottom,0px))}
+.l-foot.ok{background:var(--green-soft);border-color:transparent;animation:slideUp .28s}
+.l-foot.bad{background:var(--red-soft);border-color:transparent;animation:slideUp .28s}
+.foot-in{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.foot-in .btn{width:100%}
+@media (min-width:640px){.foot-in{flex-direction:row;align-items:center;justify-content:space-between}.foot-in .btn{width:auto}.spacer{flex:1}}
+.fb-msg{display:flex;gap:12px;align-items:flex-start;flex:1;min-width:0}
+.fb-ico{width:40px;height:40px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:900;font-size:20px;flex:none}
+.ok .fb-ico{color:var(--green)}.bad .fb-ico{color:var(--red)}
+.fb-t{font-size:20px;font-weight:900}
+.ok .fb-t{color:var(--green-text)}.bad .fb-t{color:var(--red-text)}
+.fb-c{font-size:15px;margin-top:2px;color:var(--red-text)}
+.fb-c code{white-space:pre-wrap;background:rgba(255,255,255,.55);border-color:transparent}
+.fb-e{font-size:15px;margin-top:4px;font-weight:700;color:var(--text);opacity:.9}
+
+.result{max-width:520px;margin:0 auto;text-align:center;padding-top:16px}
+.result .mascot-box{margin:0 auto 6px}
+.result h1{font-size:30px;font-weight:900;margin:8px 0 2px}
+.result .sub{color:var(--muted);margin-bottom:22px}
+.rstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rs{border:2px solid var(--c);border-radius:16px;overflow:hidden;background:var(--card)}
+.rs b{display:block;background:var(--c);color:#fff;font-size:12px;padding:5px 2px}
+.rs span{display:block;padding:14px 4px;font-size:22px;font-weight:900;color:var(--c)}
+.rs.y{--c:var(--yellow-d)}.rs.g{--c:var(--green)}.rs.o{--c:var(--orange)}
+.notes{display:grid;gap:10px;margin-top:20px}
+.note{background:var(--blue-soft);color:var(--blue);border-radius:14px;padding:12px 14px;font-weight:800;font-size:15px;animation:pop .4s}
+
+/* ---------- Modal / toast / confeti ---------- */
+.overlay{position:fixed;inset:0;background:rgba(6,14,22,.55);display:grid;place-items:center;padding:20px;z-index:80;animation:fadeIn .2s}
+.modal{position:relative;background:var(--card);border-radius:24px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow:auto;animation:pop .28s;text-align:left}
+.modal.center{text-align:center}
+.modal h3{font-size:22px;font-weight:900;margin-bottom:8px}
+.modal p{color:var(--muted);margin-bottom:18px}
+.modal .btns{display:grid;gap:10px}
+.modal .close{position:absolute;right:12px;top:12px;font-size:18px}
+.modal .field{margin-bottom:14px}
+.bigtitle{font-size:56px;margin:4px 0}
+.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:800;z-index:95;animation:slideUp .25s;max-width:calc(100% - 32px);text-align:center;transition:opacity .35s}
+.toast.out{opacity:0}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99;display:none}
+
+/* ---------- Animaciones ---------- */
+@keyframes bob{50%{transform:translateY(-6px)}}
+@keyframes bobx{50%{transform:translate(-50%,-6px)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.08)}}
+@keyframes flick{0%,80%,100%{transform:rotate(0)}86%{transform:rotate(-10deg)}92%{transform:rotate(10deg)}}
+@keyframes pop{0%{transform:scale(.85);opacity:0}60%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}}
+@keyframes ring{0%{transform:scale(.9);opacity:.5}100%{transform:scale(1.25);opacity:0}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-26px) rotate(5deg)}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+@media (max-width:400px){.brand span{display:none}.stat{padding:8px 6px;font-size:16px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="lesson" class="lesson hidden"></div>
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+<canvas id="confetti"></canvas>
+
+<script>
+/* =========================================================
+   PyITES · aprende Python jugando
+   ========================================================= */
+
+/* ---------- Utilidades ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pad = n => String(n).padStart(2, '0');
+const fmt = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const today = () => fmt(new Date());
+const dnum = s => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d) / 864e5; };
+const dayDiff = (a, b) => Math.round(dnum(b) - dnum(a));
+
+/* ---------- Estado y guardado ---------- */
+const KEY = 'pyites:v1';
+const defaults = () => ({ name: '', xp: 0, streak: 0, best: 0, lastActive: '', days: [], done: {}, sound: true, daily: { date: '', xp: 0 } });
+function load() {
+  try { const raw = localStorage.getItem(KEY); if (raw) return Object.assign(defaults(), JSON.parse(raw)); } catch (e) {}
+  return defaults();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+let state = load();
+
+const GOAL = 50;
+const TITLES = [
+  { min: 0,    name: 'Principiante', icon: '🐣' },
+  { min: 200,  name: 'Aprendiz',     icon: '🌱' },
+  { min: 600,  name: 'Intermedio',   icon: '🔥' },
+  { min: 1100, name: 'Avanzado',     icon: '⚡' },
+  { min: 1700, name: 'Experto',      icon: '👑' }
+];
+const titleIdx = xp => TITLES.reduce((r, t, i) => xp >= t.min ? i : r, 0);
+const streakNow = () => state.lastActive && dayDiff(state.lastActive, today()) <= 1 ? state.streak : 0;
+const dailyXP = () => state.daily.date === today() ? state.daily.xp : 0;
+function markActive() {
+  const t = today();
+  if (state.lastActive === t) return false;
+  const d = state.lastActive ? dayDiff(state.lastActive, t) : 99;
+  state.streak = d === 1 ? state.streak + 1 : 1;
+  state.best = Math.max(state.best || 0, state.streak);
+  state.lastActive = t;
+  if (!state.days.includes(t)) state.days.push(t);
+  state.days = state.days.slice(-60);
+  save();
+  return true;
+}
+
+/* ---------- Sonidos (Web Audio, sin archivos externos) ---------- */
+const Sound = (() => {
+  let ctx = null;
+  const ensure = () => {
+    if (!ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ctx = new AC(); }
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  };
+  function tone(f, at, dur, type = 'sine', vol = .14, to) {
+    const c = ensure(); if (!c) return;
+    const t = c.currentTime + at, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (to) o.frequency.exponentialRampToValueAtTime(to, t + dur);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + .012);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + .03);
+  }
+  const S = {
+    tick:    () => tone(700, 0, .06, 'triangle', .07),
+    pop:     () => tone(480, 0, .09, 'sine', .12, 620),
+    correct: () => { tone(659, 0, .14, 'triangle', .16); tone(988, .1, .26, 'triangle', .16); },
+    wrong:   () => { tone(240, 0, .2, 'sawtooth', .08, 170); tone(160, .16, .3, 'sawtooth', .08, 110); },
+    win:     () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .12, .32, 'triangle', .16)); tone(1319, .5, .6, 'sine', .14); },
+    fail:    () => { [392, 330, 262].forEach((f, i) => tone(f, i * .18, .34, 'triangle', .13)); },
+    levelup: () => { [392, 523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, i * .09, .3, 'square', .07)); tone(1568, .6, .8, 'triangle', .14); }
+  };
+  return { play(n) { if (state.sound && S[n]) { try { S[n](); } catch (e) {} } } };
+})();
+
+/* ---------- Resaltado de sintaxis Python ---------- */
+const KW = 'def|return|if|elif|else|for|while|in|not|and|or|import|from|as|class|try|except|finally|with|lambda|True|False|None|break|continue|pass|yield|is|raise';
+const BI = 'print|input|len|range|int|str|float|bool|list|dict|set|tuple|type|sum|min|max|sorted|open|map|filter|super|enumerate|zip|round|abs|sqrt|randint';
+const HL_RE = new RegExp('(#.*$)|("(?:[^"\\\\]|\\\\.)*"|\'(?:[^\'\\\\]|\\\\.)*\')|(\\b\\d+(?:\\.\\d+)?\\b)|(\\b(?:' + KW + ')\\b)|(\\b(?:' + BI + ')\\b)|(@\\w+)|(\\bself\\b)', 'gm');
+function hl(code) {
+  const s = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return s.replace(HL_RE, (m, c, st, n, k, b, d, sf) =>
+    c ? `<span class="c">${m}</span>` : st ? `<span class="s">${m}</span>` : n ? `<span class="n">${m}</span>` :
+    k ? `<span class="k">${m}</span>` : b ? `<span class="b">${m}</span>` : d ? `<span class="d">${m}</span>` : `<span class="n">${m}</span>`);
+}
+const codeHead = () => '<div class="code-head"><i></i><i></i><i></i><span>main.py</span></div>';
+const codeBlock = c => `<div class="code-wrap">${codeHead()}<pre class="code"><code>${hl(c)}</code></pre></div>`;
+
+/* ---------- Mascota: Pyti ---------- */
+function mascot(size = '', mood = 'happy') {
+  const mouth = mood === 'sad' ? 'M48 79 Q60 70 72 79' : 'M46 71 Q60 84 74 71';
+  const tongue = mood === 'sad' ? '' : '<path class="tongue" d="M60 80 v9 m0 0 l-4 5 m4 -5 l4 5" stroke="#ff4b4b" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  const tear = mood === 'sad' ? '<path d="M35 64 q-4 8 0 11 q4 -3 0 -11z" fill="#8fd3ff"/>' : '';
+  return `<div class="mascot-box ${size}"><svg class="mascot" viewBox="0 0 120 120" aria-hidden="true">
+    <ellipse cx="60" cy="104" rx="42" ry="13" fill="#2a5f96"/>
+    <ellipse cx="60" cy="100" rx="42" ry="13" fill="#3776ab"/>
+    <path d="M22 100 q38 12 76 0" stroke="#ffd43b" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"/>
+    <circle cx="60" cy="58" r="41" fill="#4a9be0"/>
+    <path d="M40 24 q20 -12 40 0" stroke="#ffd43b" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <ellipse cx="60" cy="74" rx="26" ry="17" fill="#ffe680"/>
+    <g class="eye"><circle cx="43" cy="50" r="12" fill="#fff"/><circle cx="45" cy="52" r="6" fill="#16283a"/><circle cx="47.5" cy="49.5" r="2" fill="#fff"/></g>
+    <g class="eye"><circle cx="77" cy="50" r="12" fill="#fff"/><circle cx="75" cy="52" r="6" fill="#16283a"/><circle cx="77.5" cy="49.5" r="2" fill="#fff"/></g>
+    <circle cx="27" cy="68" r="5" fill="#ff9bb0" opacity=".7"/><circle cx="93" cy="68" r="5" fill="#ff9bb0" opacity=".7"/>
+    <circle cx="54" cy="66" r="1.7" fill="#2a5f96"/><circle cx="66" cy="66" r="1.7" fill="#2a5f96"/>
+    <path d="${mouth}" stroke="#16283a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    ${tongue}${tear}
+  </svg></div>`;
+}
+
+/* =========================================================
+   CONTENIDO: unidades y lecciones
+   ========================================================= */
+const mc = (q, o, a, e, c) => ({ t: 'mc', q, o, a, e, c });
+const fi = (q, c, a, e) => ({ t: 'fi', q, c, a: [].concat(a), e });
+const od = (q, tk, e, s = ' ') => ({ t: 'od', q, tk, e, s });
+const lc = (h, p, code) => ({ h, p, code });
+const LS = (title, icon, learn, ex) => ({ title, icon, learn, ex });
+
+const UNITS = [
+/* ---------------- Unidad 1 ---------------- */
+{ title: 'Primeros pasos', desc: 'Tu primer programa y tus primeras variables', c: '#58cc02', cd: '#46a302', lessons: [
+  LS('Hola, mundo', '👋', [
+    lc('Tu primer programa', 'Python se lee casi como el inglés. Para mostrar algo en pantalla usamos la función <b>print()</b>.', `print("¡Hola, mundo!")`),
+    lc('Texto entre comillas', 'El texto va entre comillas <code>" "</code> o <code>\' \'</code>. A ese tipo de dato se le llama <b>string</b> (cadena de texto).', `print("Me llamo Ana")\nprint('Python es genial')`)
+  ], [
+    mc('¿Qué función muestra texto en la pantalla?', ['show()', 'print()', 'echo()', 'display()'], 1, 'print() muestra en pantalla lo que pongas entre paréntesis.'),
+    mc('¿Qué se muestra al ejecutar este código?', ['print("Hola")', 'Hola', '"Hola"', 'Error'], 1, 'Las comillas indican que es texto, pero no se muestran en pantalla.', `print("Hola")`),
+    fi('Completa el código para mostrar el mensaje.', `___("Buenos días")`, 'print', 'La función que muestra texto es print.'),
+    od('Ordena las piezas para mostrar Hola.', ['print(', '"Hola"', ')'], 'Primero la función, luego el texto y al final el paréntesis que cierra.', ''),
+    mc('¿Cuál línea está escrita correctamente?', [`print("Hola)`, `print("Hola")`, `Print("Hola")`, `print(Hola")`], 1, 'Python distingue mayúsculas de minúsculas y las comillas deben abrirse y cerrarse.'),
+    mc('¿Qué muestra este programa?', ['HolaAdiós en una línea', 'Hola y, debajo, Adiós', 'Solo Hola', 'Error'], 1, 'Cada print() escribe en una línea nueva.', `print("Hola")\nprint("Adiós")`)
+  ]),
+  LS('Comentarios y errores', '💬', [
+    lc('Notas para humanos', 'Todo lo que va después de <code>#</code> es un <b>comentario</b>: Python lo ignora. Sirve para explicar tu código.', `# Esto es un comentario\nprint("Hola")  # también aquí`),
+    lc('Los errores no dan miedo', 'Cuando algo está mal escrito, Python te avisa con un mensaje de error. Leerlo te dice qué corregir. Por ejemplo, un paréntesis sin cerrar produce un <b>SyntaxError</b>.', `print("Hola"\n# SyntaxError: '(' was never closed`)
+  ], [
+    mc('¿Qué símbolo inicia un comentario en Python?', ['//', '#', '--', '/*'], 1, 'En Python los comentarios empiezan con #.'),
+    mc('¿Qué muestra este programa?', ['Hola', 'Chau', 'Hola y Chau', 'Nada'], 1, 'La primera línea es un comentario y Python la ignora.', `# print("Hola")\nprint("Chau")`),
+    fi('Escribe el símbolo que falta para comentar la línea.', `___ Esto es un comentario`, '#', 'El # convierte el resto de la línea en comentario.'),
+    mc('¿Qué error obtienes si olvidas cerrar un paréntesis?', ['NameError', 'SyntaxError', 'ValueError', 'Ninguno'], 1, 'Un error de escritura del código es un SyntaxError (error de sintaxis).'),
+    od('Ordena: primero el comentario y luego el print.', ['# Saludo inicial', 'print("Hola")'], 'El comentario explica lo que viene a continuación.', '\n'),
+    mc('¿Para qué sirven los comentarios?', ['Para que Python los ejecute', 'Para explicar el código a las personas', 'Para acelerar el programa', 'Para guardar datos'], 1, 'Los comentarios son notas para quienes leen el código.')
+  ]),
+  LS('Variables', '📦', [
+    lc('Cajas con nombre', 'Una <b>variable</b> guarda un valor para usarlo después. Se crea con el signo <code>=</code>.', `nombre = "Sofía"\nedad = 15\nprint(nombre)\nprint(edad)`),
+    lc('Reglas de nombres', 'Los nombres pueden llevar letras, números y <code>_</code>, pero no pueden empezar con un número ni tener espacios. Además, Python distingue mayúsculas: <code>edad</code> y <code>Edad</code> son variables distintas.', `mi_puntaje = 100   # ✅ válido\n2jugador = 5       # ❌ empieza con número`)
+  ], [
+    mc('¿Qué hace la línea x = 5?', ['Compara x con 5', 'Guarda el 5 en la variable x', 'Muestra 5 en pantalla', 'Borra la variable x'], 1, 'El signo = asigna un valor a una variable.'),
+    mc('¿Qué muestra este código?', ['a', 'b', '3', 'Error'], 2, 'b recibe una copia del valor de a, que es 3.', `a = 3\nb = a\nprint(b)`),
+    mc('¿Cuál es un nombre de variable válido?', ['mi puntaje', '2jugador', 'mi_puntaje', 'mi-puntaje'], 2, 'No se permiten espacios, guiones ni empezar con un número.'),
+    fi('Guarda el número 10 en la variable vidas.', `vidas ___ 10`, '=', 'El signo = guarda el valor a su derecha en la variable.'),
+    od('Crea la variable y luego muéstrala.', ['color = "azul"', 'print(color)'], 'Primero se crea la variable y después se usa.', '\n'),
+    mc('¿Qué muestra este código?', ['5', '8', '13', 'Error'], 1, 'La variable se sobrescribe: se queda con el último valor asignado.', `x = 5\nx = 8\nprint(x)`)
+  ])
+]},
+/* ---------------- Unidad 2 ---------------- */
+{ title: 'Datos y operaciones', desc: 'Tipos de datos, matemática y texto', c: '#1cb0f6', cd: '#1899d6', lessons: [
+  LS('Tipos de datos', '🧩', [
+    lc('Cada dato tiene un tipo', 'Los tipos básicos son <b>int</b> (enteros), <b>float</b> (decimales), <b>str</b> (texto) y <b>bool</b> (verdadero o falso).', `edad = 15          # int\naltura = 1.72      # float\nnombre = "Leo"     # str\nes_alumno = True   # bool`),
+    lc('Consultar el tipo', 'Con <code>type()</code> le preguntas a Python de qué tipo es un valor.', `print(type(3.5))   # <class 'float'>`)
+  ], [
+    mc('¿De qué tipo es el valor 42?', ['int', 'float', 'str', 'bool'], 0, 'Es un número entero: int.'),
+    mc('¿De qué tipo es el valor "42"?', ['int', 'float', 'str', 'bool'], 2, 'Está entre comillas, así que es texto (str).'),
+    mc('¿De qué tipo es 3.14?', ['int', 'float', 'str', 'bool'], 1, 'Los números con punto decimal son float.'),
+    mc('¿Cuál de estos valores es un booleano?', ['"True"', 'True', '1.0', '"Sí"'], 1, 'True y False (sin comillas) son los valores booleanos.'),
+    fi('Completa para mostrar el tipo de la variable.', `precio = 9.99\nprint(___(precio))`, 'type', 'type() devuelve el tipo del valor.'),
+    mc('¿Son del mismo tipo x e y?', ['Sí, ambos son int', 'No: x es str e y es int', 'Sí, ambos son str', 'No: x es float'], 1, '"5" con comillas es texto; 5 sin comillas es un entero.', `x = "5"\ny = 5`)
+  ]),
+  LS('Operadores matemáticos', '➕', [
+    lc('Calculadora', 'Python suma <code>+</code>, resta <code>-</code>, multiplica <code>*</code> y divide <code>/</code>. También tiene potencia <code>**</code>, división entera <code>//</code> y resto <code>%</code>.', `print(7 + 3)   # 10\nprint(2 ** 3)  # 8\nprint(7 // 2)  # 3\nprint(7 % 2)   # 1`),
+    lc('Orden de operaciones', 'Igual que en matemática: primero los paréntesis, luego las potencias, después <code>*</code> y <code>/</code>, y al final <code>+</code> y <code>-</code>.', `print(2 + 3 * 4)    # 14\nprint((2 + 3) * 4)  # 20`)
+  ], [
+    mc('¿Qué muestra este código?', ['6', '14', '104', 'Error'], 0, '10 - 4 = 6.', `print(10 - 4)`),
+    mc('¿Qué muestra este código?', ['8', '6', '16', '24'], 2, '2 ** 4 significa 2 elevado a la 4: 16.', `print(2 ** 4)`),
+    mc('¿Qué muestra este código?', ['4.5', '4', '5', '1'], 1, '// es la división entera: descarta los decimales.', `print(9 // 2)`),
+    mc('¿Qué muestra este código?', ['4', '1', '0', '2'], 1, '% devuelve el resto: 9 dividido 2 da 4 y sobra 1.', `print(9 % 2)`),
+    mc('¿Qué muestra este código?', ['20', '14', '24', '9'], 1, 'Primero se multiplica (3 * 4 = 12) y luego se suma 2.', `print(2 + 3 * 4)`),
+    fi('Completa con el operador que devuelve el resto.', `print(17 ___ 5)   # muestra 2`, '%', '17 dividido 5 da 3 y sobra 2.'),
+    mc('¿Qué muestra este código?', ['5', '5.0', '2', 'Error'], 1, 'La división con / siempre devuelve un float.', `print(10 / 2)`)
+  ]),
+  LS('Cadenas de texto', '🔤', [
+    lc('Unir y repetir', 'Con <code>+</code> unes textos y con <code>*</code> los repites.', `print("Hola " + "Ana")  # Hola Ana\nprint("ja" * 3)         # jajaja`),
+    lc('f-strings', 'Pon una <code>f</code> antes de las comillas y usa <code>{ }</code> para meter variables dentro del texto.', `nombre = "Ana"\nprint(f"Hola, {nombre}!")`),
+    lc('Herramientas útiles', '<code>len()</code> cuenta los caracteres. <code>.upper()</code> y <code>.lower()</code> cambian a mayúsculas o minúsculas.', `palabra = "python"\nprint(len(palabra))     # 6\nprint(palabra.upper())  # PYTHON`)
+  ], [
+    mc('¿Qué muestra este código?', ['ja3', 'jajaja', 'ja ja ja', 'Error'], 1, 'El * repite el texto 3 veces.', `print("ja" * 3)`),
+    mc('¿Qué muestra este código?', ['Py thon', 'Python', 'Py+thon', 'Error'], 1, 'El + pega los textos sin agregar espacios.', `print("Py" + "thon")`),
+    mc('¿Qué muestra este código?', ['Hola, nombre', 'Hola, {nombre}', 'Hola, Leo', 'Error'], 2, 'Dentro de un f-string, {nombre} se reemplaza por el valor de la variable.', `nombre = "Leo"\nprint(f"Hola, {nombre}")`),
+    fi('Completa para contar los caracteres del texto.', `texto = "hola"\nprint(___(texto))   # muestra 4`, 'len', 'len() devuelve la cantidad de elementos o caracteres.'),
+    fi('Completa para pasar el texto a mayúsculas.', `print("hola".___())   # HOLA`, ['upper', 'upper()'], '.upper() convierte a mayúsculas.'),
+    od('Arma el saludo con un f-string.', ['print(', 'f"Hola, {nombre}"', ')'], 'La f antes de las comillas activa las llaves { }.', '')
+  ])
+]},
+/* ---------------- Unidad 3 ---------------- */
+{ title: 'Toma de decisiones', desc: 'Entrada de datos, if y lógica', c: '#ce82ff', cd: '#a568cc', lessons: [
+  LS('Entrada del usuario', '⌨️', [
+    lc('input()', '<code>input()</code> le pide un dato al usuario. ¡Siempre devuelve texto (str)!', `nombre = input("¿Cómo te llamas? ")\nprint("Hola", nombre)`),
+    lc('Convertir tipos', 'Para hacer cuentas con lo que escribe el usuario, primero conviértelo con <code>int()</code> o <code>float()</code>.', `edad = int(input("Edad: "))\nprint(edad + 1)`)
+  ], [
+    mc('¿Qué tipo de dato devuelve input()?', ['int', 'float', 'str', 'bool'], 2, 'input() siempre entrega texto, aunque el usuario escriba un número.'),
+    mc('¿Qué función convierte un texto a número entero?', ['str()', 'int()', 'num()', 'type()'], 1, 'int() convierte a entero.'),
+    mc('Si el usuario escribe 4, ¿qué muestra este código?', ['8', '44', 'x + x', 'Error'], 1, 'x es el texto "4", y sumar textos los une: "44".', `x = input()\nprint(x + x)`),
+    fi('Completa para convertir la entrada en un entero.', `n = ___(input("Número: "))\nprint(n * 2)`, 'int', 'int() transforma el texto en un número entero.'),
+    od('Guarda la edad como número.', ['edad', '=', 'int(input("Edad: "))'], 'Se combina input() dentro de int().'),
+    mc('¿Qué muestra este código?', ['34', '7', '3 + 4', 'Error'], 1, 'Se convierten a enteros y luego se suman: 3 + 4 = 7.', `a = int("3")\nb = int("4")\nprint(a + b)`)
+  ]),
+  LS('Condicionales if', '🔀', [
+    lc('Tomar decisiones', '<code>if</code> ejecuta un bloque solo si la condición es verdadera. No olvides los <code>:</code> ni la indentación (los espacios al inicio).', `edad = 18\nif edad >= 18:\n    print("Eres mayor")\nelse:\n    print("Eres menor")`),
+    lc('elif y comparadores', 'Comparadores: <code>==</code> igual, <code>!=</code> distinto, <code>&lt;</code> menor, <code>&gt;</code> mayor, <code>&lt;=</code> y <code>&gt;=</code>. Usa <code>elif</code> para más casos.', `nota = 7\nif nota >= 9:\n    print("Excelente")\nelif nota >= 6:\n    print("Aprobado")\nelse:\n    print("A recuperar")`)
+  ], [
+    mc('¿Qué operador comprueba si dos valores son iguales?', ['=', '==', '!=', '==='], 1, '= asigna y == compara.'),
+    mc('¿Qué muestra este código?', ['A', 'B', 'A y B', 'Nada'], 0, '5 es mayor que 3, así que se ejecuta el bloque del if.', `x = 5\nif x > 3:\n    print("A")\nelse:\n    print("B")`),
+    mc('¿Qué muestra este código?', ['Excelente', 'Aprobado', 'A recuperar', 'Error'], 1, '7 no llega a 9, pero sí es mayor o igual a 6.', `nota = 7\nif nota >= 9:\n    print("Excelente")\nelif nota >= 6:\n    print("Aprobado")\nelse:\n    print("A recuperar")`),
+    fi('Completa el símbolo que falta al final del if.', `x = 5\nif x > 3___\n    print("Mayor")`, ':', 'Los bloques if terminan la primera línea con dos puntos.'),
+    mc('¿Qué error tiene este código?', ['Falta el : al final del if', 'Falta un punto y coma', 'Faltan llaves { }', 'Ninguno'], 0, 'Toda línea if necesita : al final.', `if edad >= 18\n    print("Mayor")`),
+    od('Arma el condicional.', ['if x == 10:', '    print("Diez")'], 'La línea de dentro va con indentación.', '\n'),
+    mc('¿Cuál expresa "x es distinto de 3"?', ['x <> 3', 'x != 3', 'x =! 3', 'x not= 3'], 1, 'En Python "distinto" se escribe !=.')
+  ]),
+  LS('Operadores lógicos', '🧠', [
+    lc('and, or, not', '<code>and</code> exige que ambas condiciones sean verdaderas, <code>or</code> que al menos una lo sea y <code>not</code> invierte el resultado.', `edad = 20\ntiene_dni = True\nif edad >= 18 and tiene_dni:\n    print("Puede entrar")`),
+    lc('Tabla rápida', 'Estos resultados conviene tenerlos en la cabeza:<br><code>True and False</code> → False<br><code>True or False</code> → True<br><code>not True</code> → False', `print(True and False)  # False\nprint(True or False)   # True\nprint(not True)        # False`)
+  ], [
+    mc('¿Qué muestra este código?', ['True', 'False', 'None', 'Error'], 1, 'and necesita que ambos sean True.', `print(True and False)`),
+    mc('¿Qué muestra este código?', ['True', 'False', 'None', 'Error'], 0, 'or solo necesita que uno sea True.', `print(True or False)`),
+    mc('¿Qué muestra este código?', ['True', 'False', 'None', 'Error'], 0, 'not invierte False en True.', `print(not False)`),
+    mc('¿Qué muestra este código?', ['True', 'False', '5', 'Error'], 0, '5 es mayor que 3 y menor que 10: ambas son verdaderas.', `x = 5\nprint(x > 3 and x < 10)`),
+    fi('Completa para que el mensaje aparezca si la edad está entre 12 y 18.', `edad = 15\nif edad > 12 ___ edad < 18:\n    print("Adolescente")`, 'and', 'Ambas condiciones deben cumplirse: usamos and.'),
+    mc('¿Qué muestra este código?', ['True', 'False', '2', 'Error'], 0, 'La primera condición es falsa, pero la segunda es verdadera y or alcanza con una.', `x = 2\nprint(x < 0 or x == 2)`)
+  ])
+]},
+/* ---------------- Unidad 4 ---------------- */
+{ title: 'Bucles', desc: 'Repite tareas sin repetir código', c: '#ff9600', cd: '#d97f00', lessons: [
+  LS('for y range', '🔁', [
+    lc('Repetir con for', '<code>for</code> repite un bloque para cada elemento. <code>range(n)</code> genera los números de 0 a n-1.', `for i in range(3):\n    print(i)\n# 0\n# 1\n# 2`),
+    lc('range con inicio y paso', '<code>range(1, 4)</code> va de 1 a 3: el final no se incluye. Un tercer valor indica el paso.', `for n in range(1, 4):\n    print(n)   # 1 2 3\n\nfor n in range(0, 10, 5):\n    print(n)   # 0 5`)
+  ], [
+    mc('¿Qué números muestra este código?', ['1 2 3', '0 1 2', '0 1 2 3', 'Error'], 1, 'range(3) empieza en 0 y llega hasta 2.', `for i in range(3):\n    print(i)`),
+    mc('¿Qué números muestra este código?', ['1 2 3 4', '1 2 3', '0 1 2 3', '2 3 4'], 1, 'range(1, 4) empieza en 1 y termina antes del 4.', `for n in range(1, 4):\n    print(n)`),
+    mc('¿Cuántas veces se muestra "Hola"?', ['4', '5', '6', '1'], 1, 'range(5) da 5 vueltas.', `for i in range(5):\n    print("Hola")`),
+    fi('Completa la palabra que falta.', `for i ___ range(3):\n    print(i)`, 'in', 'La estructura es for variable in secuencia.'),
+    od('Arma el bucle.', ['for i in range(3):', '    print("Python")'], 'Recuerda los dos puntos y la indentación.', '\n'),
+    mc('¿Qué muestra este código?', ['3', '6', '10', '0'], 1, 'Suma 1 + 2 + 3 = 6.', `total = 0\nfor n in range(1, 4):\n    total = total + n\nprint(total)`)
+  ]),
+  LS('while, break y continue', '⏳', [
+    lc('Mientras se cumpla', '<code>while</code> repite mientras la condición sea verdadera. Cuidado con los bucles infinitos: ¡asegúrate de que algo cambie en cada vuelta!', `contador = 3\nwhile contador > 0:\n    print(contador)\n    contador = contador - 1\nprint("¡Despegue!")`),
+    lc('break y continue', '<code>break</code> corta el bucle por completo. <code>continue</code> salta a la siguiente vuelta.', `for i in range(10):\n    if i == 3:\n        break\n    print(i)   # 0 1 2`)
+  ], [
+    mc('¿Qué muestra este código?', ['3 2 1', '3 2 1 0', '0 1 2', 'Infinito'], 0, 'Cuando n llega a 0, la condición n > 0 deja de cumplirse.', `n = 3\nwhile n > 0:\n    print(n)\n    n = n - 1`),
+    mc('¿Qué valor muestra este código?', ['3', '4', '5', 'Infinito'], 1, 'x sube de a 1 hasta que deja de ser menor que 4.', `x = 1\nwhile x < 4:\n    x = x + 1\nprint(x)`),
+    mc('¿Qué ocurre al ejecutar este código?', ['Muestra Hola una vez', 'Muestra Hola sin parar', 'Da error', 'No hace nada'], 1, 'True nunca deja de ser verdadero: es un bucle infinito.', `while True:\n    print("Hola")`),
+    fi('Completa para cortar el bucle cuando i valga 3.', `for i in range(10):\n    if i == 3:\n        ___\n    print(i)   # 0 1 2`, 'break', 'break sale del bucle inmediatamente.'),
+    mc('¿Qué números muestra este código?', ['0 1 2 3', '0 1 3', '0 1', '1 3'], 1, 'Cuando i vale 2, continue salta el print.', `for i in range(4):\n    if i == 2:\n        continue\n    print(i)`),
+    mc('¿Cuál es el riesgo de un while mal escrito?', ['Que sea lento de escribir', 'Un bucle infinito', 'Un SyntaxError seguro', 'Ninguno'], 1, 'Si la condición nunca cambia a falsa, el programa no termina.')
+  ])
+]},
+/* ---------------- Unidad 5 ---------------- */
+{ title: 'Colecciones', desc: 'Listas, diccionarios, tuplas y sets', c: '#00cd9c', cd: '#00a87f', lessons: [
+  LS('Listas', '📋', [
+    lc('Varios valores en uno', 'Una <b>lista</b> guarda varios elementos entre corchetes. Cada uno tiene un índice que empieza en <b>0</b>.', `frutas = ["manzana", "pera", "uva"]\nprint(frutas[0])    # manzana\nprint(frutas[-1])   # uva\nprint(len(frutas))  # 3`),
+    lc('Modificar listas', '<code>.append()</code> agrega al final, <code>.remove()</code> quita un valor y <code>.pop()</code> saca el último.', `frutas.append("kiwi")\nfrutas.remove("pera")\nprint(frutas)  # ['manzana', 'uva', 'kiwi']`)
+  ], [
+    mc('¿Qué muestra este código?', ['10', '20', '30', 'Error'], 0, 'El primer elemento está en el índice 0.', `nums = [10, 20, 30]\nprint(nums[0])`),
+    mc('¿Qué muestra este código?', ['10', '20', '30', 'Error'], 2, 'El índice -1 es el último elemento.', `nums = [10, 20, 30]\nprint(nums[-1])`),
+    mc('¿Qué muestra este código?', ['3', '4', '7', 'Error'], 1, 'len() cuenta los elementos: hay 4.', `print(len([4, 5, 6, 7]))`),
+    fi('Completa para agregar "azul" al final de la lista.', `colores = ["rojo"]\ncolores.___("azul")\nprint(colores)   # ['rojo', 'azul']`, 'append', '.append() agrega un elemento al final.'),
+    mc('¿Qué números muestra este código?', ['1 2 3', '2 4 6', '2 4', 'Error'], 1, 'Recorre la lista y muestra cada elemento multiplicado por 2.', `l = [1, 2, 3]\nfor x in l:\n    print(x * 2)`),
+    mc('¿Qué índice tiene el primer elemento de una lista?', ['1', '0', '-1', 'Depende'], 1, 'En Python los índices empiezan en 0.')
+  ]),
+  LS('Diccionarios', '🗂️', [
+    lc('Clave y valor', 'Un <b>diccionario</b> guarda pares <code>clave: valor</code> entre llaves. Accedes al valor con su clave.', `alumno = {"nombre": "Ana", "edad": 15}\nprint(alumno["nombre"])   # Ana\nalumno["edad"] = 16\nalumno["curso"] = "Python"`),
+    lc('Recorrer un diccionario', '<code>.items()</code> te entrega la clave y el valor a la vez.', `for clave, valor in alumno.items():\n    print(clave, valor)`)
+  ], [
+    mc('¿Qué muestra este código?', ['1', '2', '"b"', 'Error'], 1, 'd["b"] devuelve el valor asociado a la clave "b".', `d = {"a": 1, "b": 2}\nprint(d["b"])`),
+    mc('¿Qué símbolos delimitan un diccionario?', ['[ ]', '( )', '{ }', '< >'], 2, 'Los diccionarios se escriben entre llaves.'),
+    mc('¿Qué muestra este código?', ['1', '2', '3', 'Error'], 1, 'Se agregó una clave nueva, así que el diccionario tiene 2 pares.', `p = {"nombre": "Leo"}\np["edad"] = 15\nprint(len(p))`),
+    fi('Completa con la clave para obtener el 5.', `p = {"x": 5}\nprint(p[___])`, ['"x"', "'x'"], 'Las claves de texto se escriben entre comillas.'),
+    mc('¿Para qué sirve .items()?', ['Contar elementos', 'Obtener pares clave-valor', 'Borrar todo', 'Ordenar'], 1, '.items() devuelve cada clave junto con su valor.'),
+    mc('¿Puede un diccionario tener claves repetidas?', ['Sí, siempre', 'No: la última reemplaza a la anterior', 'Solo con números', 'Solo con textos'], 1, 'Cada clave es única; si se repite, se queda con el último valor.')
+  ]),
+  LS('Tuplas y sets', '🧰', [
+    lc('Tuplas: listas inmutables', 'Una <b>tupla</b> usa paréntesis y <b>no se puede modificar</b> después de creada.', `punto = (3, 5)\nprint(punto[0])   # 3\npunto[0] = 9      # ❌ TypeError`),
+    lc('Sets: sin repetidos', 'Un <b>set</b> (conjunto) usa llaves y no guarda elementos repetidos.', `s = {1, 2, 2, 3, 3}\nprint(s)   # {1, 2, 3}`)
+  ], [
+    mc('¿Qué colección no se puede modificar?', ['list', 'tuple', 'dict', 'Todas se pueden'], 1, 'Las tuplas son inmutables.'),
+    mc('¿Qué muestra este código?', ['2', '3', '5', 'Error'], 1, 'El set descarta repetidos: queda {1, 2, 3}.', `print(len({1, 1, 2, 2, 3}))`),
+    mc('¿Qué ocurre al ejecutar este código?', ['Cambia a 10', 'Da TypeError', 'No hace nada', 'Muestra 1'], 1, 'Las tuplas no admiten asignación: da TypeError.', `t = (1, 2, 3)\nt[0] = 10`),
+    mc('¿Cómo quitas los repetidos de una lista?', ['sorted(lista)', 'set(lista)', 'len(lista)', 'tuple(lista)'], 1, 'Convertirla en set elimina los duplicados.'),
+    fi('Completa con el índice para obtener el 4.', `coords = (4, 7)\nprint(coords[___])`, '0', 'El primer elemento está en el índice 0.')
+  ])
+]},
+/* ---------------- Unidad 6 ---------------- */
+{ title: 'Funciones', desc: 'Organiza y reutiliza tu código', c: '#ff6b81', cd: '#d9546a', lessons: [
+  LS('Tus primeras funciones', '⚙️', [
+    lc('Reutiliza código', 'Una <b>función</b> es un bloque de código con nombre. Se define con <code>def</code> y se ejecuta cuando la llamas.', `def saludar():\n    print("¡Hola!")\n\nsaludar()\nsaludar()`),
+    lc('Parámetros y return', 'Las funciones reciben datos (<b>parámetros</b>) y pueden devolver un resultado con <code>return</code>.', `def sumar(a, b):\n    return a + b\n\nresultado = sumar(2, 3)\nprint(resultado)   # 5`)
+  ], [
+    mc('¿Qué palabra define una función?', ['function', 'def', 'fun', 'define'], 1, 'En Python las funciones se crean con def.'),
+    mc('¿Qué muestra este código?', ['4', '8', '44', 'Error'], 1, 'doble(4) devuelve 4 * 2 = 8.', `def doble(x):\n    return x * 2\n\nprint(doble(4))`),
+    fi('Completa para que la función devuelva la suma.', `def sumar(a, b):\n    ___ a + b`, 'return', 'return devuelve el resultado a quien llamó la función.'),
+    mc('Si defines una función pero nunca la llamas...', ['Se ejecuta sola', 'No se ejecuta', 'Da error', 'Se ejecuta dos veces'], 1, 'Definir una función no la ejecuta: hay que llamarla.'),
+    od('Define la función y luego llámala.', ['def saludar():', '    print("Hola")', 'saludar()'], 'Primero def, luego el cuerpo con indentación y por último la llamada.', '\n'),
+    mc('¿Qué valor muestra este código?', ['13', '25', '10', 'Error'], 0, '9 + 4 = 13.', `def cuadrado(n):\n    return n * n\n\nx = cuadrado(3) + cuadrado(2)\nprint(x)`)
+  ]),
+  LS('Más sobre funciones', '🎛️', [
+    lc('Valores por defecto', 'Un parámetro puede tener un valor por defecto que se usa si no envías nada.', `def saludar(nombre="amigo"):\n    print(f"Hola, {nombre}")\n\nsaludar()         # Hola, amigo\nsaludar("Ana")    # Hola, Ana`),
+    lc('Alcance (scope)', 'Las variables creadas dentro de una función solo existen ahí adentro.', `def f():\n    secreto = 42\n\nf()\nprint(secreto)   # ❌ NameError`)
+  ], [
+    mc('¿Qué muestra este código?', ['Hola n', 'Hola mundo', 'Error', 'Hola'], 1, 'Sin argumento, n vale "mundo".', `def saludar(n="mundo"):\n    print("Hola", n)\n\nsaludar()`),
+    mc('¿Qué muestra este código?', ['Hola mundo', 'Hola Ana', 'Hola n', 'Error'], 1, 'El argumento "Ana" reemplaza el valor por defecto.', `def saludar(n="mundo"):\n    print("Hola", n)\n\nsaludar("Ana")`),
+    mc('¿Qué ocurre al ejecutar este código?', ['Muestra 1', 'Muestra None', 'Da NameError', 'Muestra 0'], 2, 'x solo existe dentro de la función, fuera no se conoce.', `def f():\n    x = 1\n\nf()\nprint(x)`),
+    mc('¿Qué muestra este código?', ['3', 'None', '2', 'Error'], 1, 'Sin return, la función devuelve None.', `def f(x):\n    x + 1\n\nprint(f(2))`),
+    fi('Completa con el operador de potencia.', `def potencia(base, exp=2):\n    return base ___ exp\n\nprint(potencia(3))   # 9`, '**', 'El operador ** eleva a una potencia.'),
+    mc('¿Para qué sirve return?', ['Mostrar en pantalla', 'Devolver un valor a quien llamó la función', 'Repetir la función', 'Borrar variables'], 1, 'return entrega un resultado que puedes guardar o usar.')
+  ])
+]},
+/* ---------------- Unidad 7 ---------------- */
+{ title: 'Herramientas', desc: 'Errores, módulos y comprensiones', c: '#6c7bff', cd: '#5562d9', lessons: [
+  LS('Manejo de errores', '🛡️', [
+    lc('Atrapar errores', 'Con <code>try</code> pruebas código riesgoso y con <code>except</code> decides qué hacer si falla, en lugar de que el programa se rompa.', `try:\n    n = int("abc")\nexcept ValueError:\n    print("Eso no es un número")`),
+    lc('Errores comunes', '<b>ValueError</b>: valor inválido. <b>ZeroDivisionError</b>: dividir por cero. <b>TypeError</b>: tipo incorrecto. <b>KeyError</b>: clave inexistente. Y <code>finally</code> se ejecuta siempre.', `try:\n    print(10 / 0)\nexcept ZeroDivisionError:\n    print("No se divide por cero")\nfinally:\n    print("Fin")`)
+  ], [
+    mc('¿Qué muestra este código?', ['hola', 'Error', 'Nada', 'El programa se rompe'], 1, 'int("hola") falla con ValueError y se ejecuta el except.', `try:\n    int("hola")\nexcept ValueError:\n    print("Error")`),
+    mc('¿Qué error produce 10 / 0?', ['ValueError', 'ZeroDivisionError', 'TypeError', 'NameError'], 1, 'Dividir por cero levanta ZeroDivisionError.'),
+    fi('Completa la palabra clave que atrapa el error.', `try:\n    x = 1 / 0\n___ ZeroDivisionError:\n    print("Uy")`, 'except', 'except define qué hacer cuando ocurre el error.'),
+    mc('¿Cuándo se ejecuta el bloque finally?', ['Solo si hay error', 'Solo si no hay error', 'Siempre', 'Nunca'], 2, 'finally se ejecuta haya error o no.'),
+    mc('¿Qué muestra este código?', ['1', 'None', 'No existe', 'Se rompe'], 2, 'La clave "b" no existe: KeyError y se ejecuta el except.', `d = {"a": 1}\ntry:\n    print(d["b"])\nexcept KeyError:\n    print("No existe")`),
+    mc('¿Qué error produce "5" + 3?', ['ValueError', 'TypeError', 'SyntaxError', 'Ninguno, da 8'], 1, 'No se puede sumar un texto con un número: TypeError.')
+  ]),
+  LS('Módulos e import', '📦', [
+    lc('Código de otros', 'Python trae <b>módulos</b> listos para usar. Los traes con <code>import</code>.', `import math\nprint(math.sqrt(16))   # 4.0\nprint(math.pi)         # 3.14159...`),
+    lc('random y from', '<code>random</code> genera azar. Con <code>from ... import</code> traes solo lo que necesitas.', `import random\nprint(random.randint(1, 6))   # un dado\n\nfrom math import sqrt\nprint(sqrt(25))   # 5.0`)
+  ], [
+    mc('¿Qué palabra trae un módulo a tu programa?', ['use', 'import', 'include', 'load'], 1, 'Los módulos se traen con import.'),
+    mc('¿Qué muestra este código?', ['3', '3.0', '9', 'Error'], 1, 'sqrt devuelve un float: 3.0.', `import math\nprint(math.sqrt(9))`),
+    fi('Completa la palabra que falta.', `___ random\nprint(random.randint(1, 6))`, 'import', 'Sin import, Python no conoce el módulo random.'),
+    mc('¿Qué módulo usarías para obtener un número al azar?', ['math', 'random', 'time', 'os'], 1, 'random sirve para generar valores aleatorios.'),
+    mc('¿Qué muestra este código?', ['2', '2.0', '4', 'Error'], 1, 'sqrt(4) devuelve 2.0.', `from math import sqrt\nprint(sqrt(4))`),
+    od('Importa solo pi desde math.', ['from', 'math', 'import', 'pi'], 'La forma es from módulo import nombre.')
+  ]),
+  LS('Comprensiones de listas', '✨', [
+    lc('Listas en una línea', 'Una <b>list comprehension</b> crea una lista nueva a partir de otra de forma compacta.', `cuadrados = [n * n for n in range(5)]\nprint(cuadrados)   # [0, 1, 4, 9, 16]`),
+    lc('Con filtro', 'Puedes agregar un <code>if</code> al final para quedarte solo con lo que cumple.', `pares = [n for n in range(10) if n % 2 == 0]\nprint(pares)   # [0, 2, 4, 6, 8]`)
+  ], [
+    mc('¿Qué muestra este código?', ['[0, 2, 4, 6]', '[2, 4, 6, 8]', '[0, 1, 2, 3]', '[0, 2, 4]'], 0, 'Multiplica por 2 cada número de 0 a 3.', `print([x * 2 for x in range(4)])`),
+    mc('¿Qué muestra este código?', ['[3, 4, 5]', '[4, 5]', '[4, 5, 6]', '[0, 1, 2, 3]'], 1, 'Solo pasan los números mayores que 3 dentro de range(6).', `print([n for n in range(6) if n > 3])`),
+    fi('Completa para obtener los cuadrados.', `nums = [___ for n in range(3)]\nprint(nums)   # [0, 1, 4]`, ['n * n', 'n*n', 'n ** 2', 'n**2'], 'Cada n se eleva al cuadrado.'),
+    mc('¿Qué muestra este código?', [`['A', 'B', 'C']`, 'ABC', `['abc']`, 'Error'], 0, 'Recorre cada letra y la pasa a mayúscula.', `letras = [c.upper() for c in "abc"]\nprint(letras)`),
+    mc('¿Qué ventaja tienen las comprensiones?', ['Son más cortas y legibles en casos simples', 'Siempre son más rápidas que todo', 'Evitan usar listas', 'Reemplazan a las funciones'], 0, 'Resumen en una línea un bucle que arma una lista.')
+  ])
+]},
+/* ---------------- Unidad 8 ---------------- */
+{ title: 'Nivel experto', desc: 'Clases, funciones avanzadas y archivos', c: '#e6a700', cd: '#b98600', lessons: [
+  LS('Clases y objetos', '🏗️', [
+    lc('Plantillas de objetos', 'Una <b>clase</b> es un molde para crear objetos. <code>__init__</code> se ejecuta al crear el objeto y <code>self</code> es el propio objeto.', `class Perro:\n    def __init__(self, nombre):\n        self.nombre = nombre\n\n    def ladrar(self):\n        print(f"{self.nombre} dice guau")\n\nrex = Perro("Rex")\nrex.ladrar()`),
+    lc('Herencia', 'Una clase puede heredar de otra y reutilizar su código.', `class Animal:\n    def hablar(self):\n        print("...")\n\nclass Gato(Animal):\n    def hablar(self):\n        print("Miau")\n\nGato().hablar()   # Miau`)
+  ], [
+    mc('¿Qué palabra define una clase?', ['class', 'def', 'object', 'new'], 0, 'Las clases se crean con class.'),
+    mc('¿Qué método se ejecuta al crear un objeto?', ['__start__', '__init__', '__new_obj__', 'crear()'], 1, '__init__ es el constructor.'),
+    mc('¿Qué muestra este código?', ['nombre', 'Luna', 'Perro', 'Error'], 1, 'El objeto guarda "Luna" en self.nombre.', `class Perro:\n    def __init__(self, nombre):\n        self.nombre = nombre\n\np = Perro("Luna")\nprint(p.nombre)`),
+    fi('Completa el primer parámetro de los métodos.', `class Coche:\n    def __init__(___, marca):\n        self.marca = marca`, 'self', 'self representa al objeto que se está creando o usando.'),
+    mc('¿Qué muestra este código?', ['A', 'B', 'Error', 'Nada'], 0, 'B hereda hola() de A (pass significa "no hacer nada más").', `class A:\n    def hola(self):\n        print("A")\n\nclass B(A):\n    pass\n\nB().hola()`),
+    mc('¿Qué es la herencia?', ['Copiar y pegar código', 'Que una clase reutilice y extienda otra', 'Borrar una clase', 'Crear variables globales'], 1, 'La clase hija recibe los métodos de la clase padre.')
+  ]),
+  LS('Lambda, map y filter', '🧪', [
+    lc('Funciones lambda', 'Una <b>lambda</b> es una función pequeña, de una sola línea y sin nombre propio.', `doble = lambda x: x * 2\nprint(doble(5))   # 10`),
+    lc('map y filter', '<code>map</code> aplica una función a cada elemento y <code>filter</code> se queda con los que cumplen una condición.', `nums = [1, 2, 3, 4]\nprint(list(map(lambda x: x * 10, nums)))         # [10, 20, 30, 40]\nprint(list(filter(lambda x: x % 2 == 0, nums)))  # [2, 4]`)
+  ], [
+    mc('¿Qué muestra este código?', ['4', '5', 'x + 1', 'Error'], 1, 'La lambda suma 1 al valor recibido.', `f = lambda x: x + 1\nprint(f(4))`),
+    mc('¿Qué muestra este código?', ['[1, 2, 3]', '[2, 4, 6]', '[2, 3, 4]', 'Error'], 1, 'map aplica la lambda a cada elemento.', `print(list(map(lambda x: x * 2, [1, 2, 3])))`),
+    mc('¿Qué muestra este código?', ['[1, 2]', '[3, 4]', '[2, 3, 4]', '[1, 2, 3, 4]'], 1, 'filter conserva los que cumplen x > 2.', `print(list(filter(lambda x: x > 2, [1, 2, 3, 4])))`),
+    fi('Completa la palabra clave de la función anónima.', `cuadrado = ___ n: n * n`, 'lambda', 'Las funciones anónimas se crean con lambda.'),
+    mc('¿Qué hace filter()?', ['Ordena una lista', 'Conserva los elementos que cumplen una condición', 'Suma los elementos', 'Invierte la lista'], 1, 'filter descarta lo que no cumple la condición.'),
+    mc('¿Qué muestra este código?', ['[1, 2, 3]', '[3, 2, 1]', '[3, 1, 2]', 'Error'], 1, 'Se ordena por -x, es decir, de mayor a menor.', `print(sorted([3, 1, 2], key=lambda x: -x))`)
+  ]),
+  LS('Archivos y with', '📁', [
+    lc('Leer y escribir', '<code>open()</code> abre un archivo. Con <code>with</code> se cierra solo al terminar. Modos: <code>"r"</code> leer, <code>"w"</code> escribir (borra lo anterior) y <code>"a"</code> agregar al final.', `with open("notas.txt", "w") as f:\n    f.write("Hola archivo")\n\nwith open("notas.txt") as f:\n    print(f.read())`)
+  ], [
+    mc('¿Qué modo abre un archivo para escribir borrando lo anterior?', ['"r"', '"w"', '"a"', '"b"'], 1, '"w" (write) crea o reemplaza el archivo.'),
+    mc('¿Qué ventaja tiene with open(...)?', ['Es más rápido', 'Cierra el archivo automáticamente', 'Encripta el archivo', 'Evita errores de sintaxis'], 1, 'with cierra el archivo solo, incluso si hay un error.'),
+    fi('Completa el método para escribir en el archivo.', `with open("datos.txt", "w") as f:\n    f.___("Hola")`, 'write', '.write() escribe texto en el archivo.'),
+    mc('¿Qué modo agrega texto al final sin borrar lo que había?', ['"r"', '"w"', '"a"', '"x"'], 2, '"a" (append) agrega al final.'),
+    mc('¿De qué tipo es la variable texto?', ['list', 'str', 'int', 'file'], 1, '.read() devuelve el contenido como texto.', `with open("a.txt") as f:\n    texto = f.read()`)
+  ]),
+  LS('Generadores y decoradores', '🎩', [
+    lc('Generadores', 'Un <b>generador</b> usa <code>yield</code> para entregar valores de a uno, sin guardarlos todos en memoria.', `def contar(n):\n    for i in range(n):\n        yield i\n\nfor x in contar(3):\n    print(x)   # 0 1 2`),
+    lc('Decoradores', 'Un <b>decorador</b> es una función que envuelve a otra para agregarle comportamiento. Se aplica con <code>@</code>.', `def ruidoso(f):\n    def envoltura():\n        print("Antes")\n        f()\n        print("Después")\n    return envoltura\n\n@ruidoso\ndef hola():\n    print("Hola")\n\nhola()`)
+  ], [
+    mc('¿Qué palabra convierte una función en generador?', ['return', 'yield', 'gen', 'next'], 1, 'yield entrega un valor y pausa la función.'),
+    mc('¿Qué muestra este código?', ['[1]', '[1, 2]', '[2]', 'Error'], 1, 'El generador entrega 1 y luego 2.', `def g():\n    yield 1\n    yield 2\n\nprint(list(g()))`),
+    mc('¿Qué muestra hola() con el decorador aplicado?', ['Solo Hola', 'Antes, Hola y Después', 'Antes y Después', 'Error'], 1, 'El decorador envuelve la función con mensajes antes y después.', `@ruidoso\ndef hola():\n    print("Hola")\n\nhola()`),
+    mc('¿Qué símbolo aplica un decorador?', ['#', '@', '$', '&'], 1, 'Los decoradores se escriben con @ encima de la función.'),
+    mc('¿Cuál es la ventaja principal de un generador?', ['Guarda todos los valores a la vez', 'Produce valores bajo demanda y ahorra memoria', 'Es más corto de escribir', 'Evita usar bucles'], 1, 'Genera cada valor cuando se necesita, sin construir la lista completa.')
+  ])
+]}
+];
+
+/* Lista plana de lecciones */
+const FLAT = [];
+UNITS.forEach((u, ui) => u.lessons.forEach((les, li) => FLAT.push({ ui, li, id: `u${ui}l${li}`, unit: u, lesson: les, g: FLAT.length })));
+const curIdx = () => { const i = FLAT.findIndex(f => !state.done[f.id]); return i < 0 ? FLAT.length : i; };
+const doneCount = () => FLAT.filter(f => state.done[f.id]).length;
+
+/* =========================================================
+   INTERFAZ: bienvenida e inicio
+   ========================================================= */
+function renderWelcome() {
+  const bits = ['print()', 'def', 'if', 'for', '[ ]', '{ }', '#', '==', 'lambda', 'import', 'True', '->'];
+  const floats = bits.map((b, i) => `<span class="float" style="left:${(i * 83 + 7) % 92}%;top:${(i * 47 + 9) % 88}%;animation-delay:${-i * .9}s;font-size:${16 + (i % 4) * 4}px">${esc(b)}</span>`).join('');
+  $('#app').innerHTML = `<div class="welcome">${floats}
+    <div class="wbox">
+      ${mascot('lg')}
+      <h1>Py<b>ITES</b></h1>
+      <p class="lead">Aprende Python paso a paso, sin saber nada de programación.</p>
+      <input id="nameIn" class="field" maxlength="20" placeholder="¿Cómo te llamas?" autocomplete="off" autocapitalize="words" aria-label="Tu nombre">
+      <button class="btn green" data-act="start">Empezar</button>
+      <p class="wnote">Tu progreso se guarda en este navegador.</p>
+    </div></div>`;
+  setTimeout(() => { const i = $('#nameIn'); if (i) i.focus(); }, 80);
+}
+
+function topHTML() {
+  const s = streakNow(), on = state.lastActive === today();
+  return `<div class="brand">${mascot('xs')}<span>Py<b>ITES</b></span></div>
+    <div class="stats">
+      <button class="stat streak ${on ? '' : 'off'}" data-act="profile" title="Racha de días"><span class="fl">🔥</span>${s}</button>
+      <button class="stat xp" data-act="profile" title="Puntos">⭐ ${state.xp}</button>
+      <button class="ib" data-act="sound" aria-label="${state.sound ? 'Silenciar sonidos' : 'Activar sonidos'}">${state.sound ? '🔊' : '🔇'}</button>
+      <button class="ib avatar" data-act="profile" aria-label="Mi perfil">${esc((state.name[0] || '?').toUpperCase())}</button>
+    </div>`;
+}
+
+const OFF = [0, 46, 72, 46, 0, -46, -72, -46];
+function pathHTML() {
+  const cur = curIdx(), ti = titleIdx(state.xp), T = TITLES[ti];
+  let out = `<div class="card hello only-mobile"><div><h2>¡Hola, ${esc(state.name)}!</h2><p>${T.icon} ${T.name} · ${doneCount()} de ${FLAT.length} lecciones</p></div>${mascot('sm')}</div>`;
+  UNITS.forEach((u, ui) => {
+    const dn = u.lessons.filter((_, li) => state.done[`u${ui}l${li}`]).length;
+    out += `<section class="unit" style="--c:${u.c};--cd:${u.cd}">
+      <div class="ub"><div><small>Unidad ${ui + 1}</small><h3>${esc(u.title)}</h3><p>${esc(u.desc)}</p></div><div class="cnt">${dn}/${u.lessons.length}</div></div>`;
+    u.lessons.forEach((les, li) => {
+      const f = FLAT.find(x => x.ui === ui && x.li === li), done = !!state.done[f.id], isCur = f.g === cur, locked = f.g > cur;
+      const rec = state.done[f.id];
+      const badge = done ? `<span class="badge">${rec && rec.best === 100 ? '★' : '✓'}</span>` : '';
+      out += `<div class="row ${isCur ? 'is-cur' : ''} ${locked ? 'lk' : ''}" style="--x:${OFF[f.g % OFF.length]}px">
+        <button class="node ${locked ? 'locked' : ''} ${isCur ? 'cur' : ''} ${justDone === f.id ? 'just' : ''}" data-act="lesson" data-g="${f.g}" aria-label="Lección ${esc(les.title)}${locked ? ' (bloqueada)' : ''}">
+          ${isCur ? '<span class="bubble">¡Empezar!</span>' : ''}${locked ? '🔒' : les.icon}${badge}</button>
+        <div class="node-label">${esc(les.title)}</div></div>`;
+    });
+    out += '</section>';
+  });
+  if (cur >= FLAT.length) out += `<div class="card finish">${mascot('')}<h3>¡Completaste PyITES!</h3><p style="color:var(--muted)">Repite cualquier lección para seguir sumando puntos.</p></div>`;
+  return out;
+}
+
+function profileHTML() {
+  const ti = titleIdx(state.xp), T = TITLES[ti], N = TITLES[ti + 1];
+  const pct = N ? Math.round((state.xp - T.min) / (N.min - T.min) * 100) : 100;
+  const now = new Date(), dow = (now.getDay() + 6) % 7, L = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+  const week = L.map((l, i) => {
+    const d = fmt(new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow + i));
+    return `<div class="${state.days.includes(d) ? 'on' : ''} ${d === today() ? 'today' : ''}">${l}<span>🔥</span></div>`;
+  }).join('');
+  const dxp = dailyXP();
+  return `<div class="prof">
+    <div class="prof-top"><div class="avatar">${esc((state.name[0] || '?').toUpperCase())}</div>
+      <div><div class="pname">${esc(state.name)} <button class="mini" data-act="editname" aria-label="Cambiar nombre">✏️</button></div><div class="ptitle">${T.icon} ${T.name}</div></div></div>
+    <div class="mstats">
+      <div class="ms"><b>🔥 ${streakNow()}</b><span>Racha</span></div>
+      <div class="ms"><b>⭐ ${state.xp}</b><span>Puntos</span></div>
+      <div class="ms"><b>✅ ${doneCount()}</b><span>Lecciones</span></div>
+    </div>
+    <div class="psec"><h4>Próximo título <span>${N ? `${N.icon} ${N.name} · faltan ${N.min - state.xp}` : 'Nivel máximo'}</span></h4><div class="pbar"><i style="width:${pct}%"></i></div></div>
+    <div class="psec"><h4>Meta diaria <span>${Math.min(dxp, GOAL)}/${GOAL} puntos</span></h4><div class="pbar g"><i style="width:${Math.min(100, dxp / GOAL * 100)}%"></i></div></div>
+    <div class="psec"><h4>Esta semana <span>Mejor racha: ${state.best || 0}</span></h4><div class="week">${week}</div></div>
+    <div class="psec"><h4>Títulos</h4><div class="chips">${TITLES.map((t, i) => `<span class="tchip ${i > ti ? 'lock' : ''} ${i === ti ? 'now' : ''}">${i > ti ? '🔒' : t.icon} ${t.name}</span>`).join('')}</div></div>
+    <div class="pact">
+      <button class="btn ghost" data-act="sound">${state.sound ? '🔊 Sonido activado' : '🔇 Sonido silenciado'}</button>
+      <button class="btn ghost danger" data-act="reset">Resetear progreso</button>
+    </div></div>`;
+}
+
+let justDone = null;
+function refreshAll() { if (!$('#tb')) return renderHome(); $('#tb').innerHTML = topHTML(); $('#path').innerHTML = pathHTML(); $('#side').innerHTML = profileHTML(); }
+function renderHome(first = true) {
+  $('#app').innerHTML = `<header class="topbar"><div class="tb-in" id="tb"></div></header>
+    <div class="layout"><main class="path" id="path"></main><aside class="side card" id="side"></aside></div>`;
+  refreshAll();
+  setTimeout(() => { const n = document.querySelector('.node.cur'); if (n) n.scrollIntoView({ block: 'center', behavior: first ? 'auto' : 'smooth' }); }, 60);
+}
+function render() { state.name ? renderHome() : renderWelcome(); }
+
+/* ---------- Modales, avisos y confeti ---------- */
+function openModal(html, cls = '') {
+  closeModal();
+  const o = document.createElement('div'); o.className = 'overlay'; o.id = 'overlay';
+  o.innerHTML = `<div class="modal ${cls}" role="dialog" aria-modal="true">${html}</div>`;
+  o.addEventListener('mousedown', ev => { if (ev.target === o) closeModal(); });
+  $('#modal-root').appendChild(o);
+}
+function closeModal() { const o = $('#overlay'); if (o) o.remove(); }
+function toast(msg) {
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; $('#toast-root').appendChild(t);
+  setTimeout(() => t.classList.add('out'), 2200); setTimeout(() => t.remove(), 2700);
+}
+function confetti(n = 150) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cv = $('#confetti'), ctx = cv.getContext('2d'), dpr = window.devicePixelRatio || 1, W = innerWidth, H = innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr; cv.style.display = 'block'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cols = ['#58cc02', '#1cb0f6', '#ffd43b', '#ff4b4b', '#ce82ff', '#ff9600'];
+  const P = Array.from({ length: n }, () => ({ x: W / 2 + (Math.random() - .5) * W * .3, y: H * .4, vx: (Math.random() - .5) * 15, vy: -Math.random() * 15 - 4, g: .35 + Math.random() * .2, s: 6 + Math.random() * 7, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[Math.random() * cols.length | 0] }));
+  let f = 0;
+  (function tick() {
+    ctx.clearRect(0, 0, W, H);
+    P.forEach(p => { p.vy += p.g; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * .6); ctx.restore(); });
+    if (++f < 160) requestAnimationFrame(tick); else { ctx.clearRect(0, 0, W, H); cv.style.display = 'none'; }
+  })();
+}
+
+/* =========================================================
+   LECCIONES
+   ========================================================= */
+let L = null;
+const norm = s => s.replace(/\s+/g, '').replace(/'/g, '"');
+const isMono = t => /[()\[\]{}=_#"'<>@*]/.test(t) || /^-?\d+(\.\d+)?$/.test(t);
+
+function prep(x, id, retry = false) {
+  const e = { ...x, id, src: x, retry };
+  if (x.t === 'mc') e.opts = shuffle(x.o.map((t, i) => ({ t, ok: i === x.a })));
+  if (x.t === 'od') { e.bank = shuffle(x.tk.map((t, i) => ({ t, i }))); if (e.bank.length > 1 && e.bank.every((b, k) => b.i === k)) e.bank.reverse(); }
+  if (x.t === 'fi') e.parts = x.c.split('___');
+  return e;
+}
+
+function startLesson(g) {
+  const f = FLAT[g];
+  L = { g, f, first: !state.done[f.id], phase: 'learn', step: 0, queue: f.lesson.ex.map((x, i) => prep(x, i)), total: f.lesson.ex.length,
+        solved: new Set(), missed: new Set(), hearts: 5, mistakes: 0, xp: 0, newDay: false, checked: false, val: '', sel: -1, placed: [] };
+  document.documentElement.classList.add('noscroll');
+  const el = $('#lesson'); el.classList.remove('hidden');
+  el.innerHTML = `<div class="l-head"><button class="x" data-act="quit" aria-label="Salir de la lección">✕</button>
+    <div class="bar"><i id="lbar"></i></div><div class="hearts" id="hearts"></div></div>
+    <div class="l-body" id="lb"><div class="l-inner" id="li"></div></div><div class="l-foot" id="lf"></div>`;
+  updateHead(); showLearn();
+}
+function closeLesson() {
+  $('#lesson').classList.add('hidden'); $('#lesson').innerHTML = '';
+  document.documentElement.classList.remove('noscroll'); L = null;
+}
+function updateHead() {
+  $('#lbar').style.width = Math.round(L.solved.size / L.total * 100) + '%';
+  $('#hearts').textContent = '❤️ ' + L.hearts;
+}
+const setCheck = v => { const b = $('#checkbtn'); if (b) b.disabled = !v; };
+function scrollTop() { const b = $('#lb'); if (b) b.scrollTop = 0; }
+
+function showLearn() {
+  const cards = L.f.lesson.learn, c = cards[L.step], last = L.step === cards.length - 1;
+  $('#li').innerHTML = `<span class="tag">💡 Aprende ${L.step + 1}/${cards.length}</span>
+    <div class="teach">${mascot('sm')}<div class="speech"><h2>${c.h}</h2><p>${c.p}</p></div></div>${codeBlock(c.code)}`;
+  const lf = $('#lf'); lf.className = 'l-foot';
+  lf.innerHTML = `<div class="foot-in">${!L.first && last ? '<button class="btn ghost" data-act="skipLearn">Saltar</button>' : '<span class="spacer"></span>'}
+    <button class="btn green wide" data-act="learnNext">${last ? 'Ir a los ejercicios' : 'Continuar'}</button></div>`;
+  scrollTop();
+}
+
+function exHTML(e) {
+  let h = `${e.retry ? '<span class="tag warn">🔁 Repaso</span>' : '<span class="tag">Practica</span>'}<h2 class="q">${esc(e.q)}</h2>`;
+  if (e.t === 'mc') {
+    if (e.c) h += codeBlock(e.c);
+    h += '<div class="opts">' + e.opts.map((o, i) => `<button class="opt ${isMono(o.t) ? 'mono' : ''}" data-act="opt" data-i="${i}"><span class="key">${i + 1}</span><span class="otxt">${esc(o.t)}</span></button>`).join('') + '</div>';
+  } else if (e.t === 'fi') {
+    const w = Math.max(...e.a.map(a => a.length)) + 3;
+    const inp = `<input id="blank" class="blank" style="width:${w}ch" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Respuesta">`;
+    h += `<div class="code-wrap">${codeHead()}<pre class="code"><code>${e.parts.map(hl).join(inp)}</code></pre></div>`;
+  } else {
+    h += '<div class="zone" id="zone"></div><div class="bank" id="bank"></div>';
+  }
+  return h;
+}
+function renderOd() {
+  const e = L.queue[0];
+  $('#zone').innerHTML = L.placed.length ? L.placed.map(i => `<button class="chip" data-act="unplace" data-i="${i}">${esc(e.tk[i])}</button>`).join('') : '<span class="hint">Toca las piezas para armar la respuesta</span>';
+  $('#bank').innerHTML = e.bank.filter(x => !L.placed.includes(x.i)).map(x => `<button class="chip" data-act="place" data-i="${x.i}">${esc(x.t)}</button>`).join('');
+  setCheck(L.placed.length > 0);
+}
+function showEx() {
+  const e = L.queue[0];
+  L.checked = false; L.val = ''; L.sel = -1; L.placed = [];
+  $('#li').innerHTML = exHTML(e);
+  const lf = $('#lf'); lf.className = 'l-foot';
+  lf.innerHTML = '<div class="foot-in"><span class="spacer"></span><button id="checkbtn" class="btn green wide" data-act="check" disabled>Comprobar</button></div>';
+  if (e.t === 'od') renderOd();
+  if (e.t === 'fi') setTimeout(() => { const i = $('#blank'); if (i) i.focus(); }, 60);
+  updateHead(); scrollTop();
+}
+
+function check() {
+  if (!L || L.checked) return;
+  const e = L.queue[0]; let ok = false, ans = '';
+  if (e.t === 'mc') { if (L.sel < 0) return; ok = e.opts[L.sel].ok; ans = e.opts.find(o => o.ok).t; }
+  else if (e.t === 'fi') { if (!L.val.trim()) return; ok = e.a.some(a => norm(a) === norm(L.val)); ans = e.a[0]; }
+  else { if (!L.placed.length) return; ok = L.placed.map(i => e.tk[i]).join('\u0001') === e.tk.join('\u0001'); ans = e.tk.join(e.s); }
+  L.checked = true;
+
+  /* marca visual */
+  if (e.t === 'mc') document.querySelectorAll('.opt').forEach((b, i) => { b.disabled = true; b.classList.remove('sel'); if (e.opts[i].ok) b.classList.add('ok'); else if (i === L.sel) b.classList.add('no'); });
+  if (e.t === 'fi') { const i = $('#blank'); i.readOnly = true; i.blur(); i.classList.add(ok ? 'ok' : 'no'); }
+  if (e.t === 'od') { $('#zone').classList.add(ok ? 'ok' : 'no'); document.querySelectorAll('.chip').forEach(c => c.disabled = true); }
+
+  /* lógica */
+  L.queue.shift();
+  if (ok) {
+    if (!L.solved.has(e.id)) { L.solved.add(e.id); L.xp += L.missed.has(e.id) ? 5 : 10; }
+    if (markActive()) L.newDay = true;
+    Sound.play('correct');
+  } else {
+    L.mistakes++; L.missed.add(e.id); L.hearts--;
+    L.queue.push(prep(e.src, e.id, true));
+    Sound.play('wrong');
+    const h = $('#hearts'); h.classList.remove('hit'); void h.offsetWidth; h.classList.add('hit');
+  }
+  updateHead();
+
+  const okT = ['¡Excelente!', '¡Muy bien!', '¡Correcto!', '¡Genial!', '¡Así se hace!'], badT = ['Casi, ¡no te rindas!', 'Ups, esa no era', 'Sigue intentando'];
+  const pick = a => a[Math.random() * a.length | 0];
+  const lf = $('#lf'); lf.className = 'l-foot ' + (ok ? 'ok' : 'bad');
+  lf.innerHTML = `<div class="foot-in"><div class="fb-msg"><div class="fb-ico">${ok ? '✓' : '✕'}</div><div>
+      <div class="fb-t">${ok ? pick(okT) : pick(badT)}</div>
+      ${ok ? '' : `<div class="fb-c">Respuesta correcta: <code>${esc(ans)}</code></div>`}
+      ${e.e ? `<div class="fb-e">${esc(e.e)}</div>` : ''}</div></div>
+    <button class="btn ${ok ? 'green' : 'red'} wide" data-act="next">Continuar</button></div>`;
+  const nb = lf.querySelector('.btn'); if (nb) nb.focus({ preventScroll: true });
+}
+
+function next() {
+  if (!L || !L.checked) return;
+  if (L.hearts <= 0) return showFail();
+  if (!L.queue.length) return complete();
+  showEx();
+}
+
+function showFail() {
+  Sound.play('fail');
+  $('#li').innerHTML = `<div class="result">${mascot('lg', 'sad')}<h1>¡Te quedaste sin vidas!</h1>
+    <p class="sub">No pasa nada: equivocarse es parte de aprender. Repasa la explicación y vuelve a intentarlo.</p></div>`;
+  const lf = $('#lf'); lf.className = 'l-foot';
+  lf.innerHTML = '<div class="foot-in"><button class="btn ghost" data-act="exit">Salir</button><button class="btn green wide" data-act="retry">Intentar de nuevo</button></div>';
+}
+
+function complete() {
+  const f = L.f, prev = titleIdx(state.xp);
+  const perfect = L.mistakes === 0;
+  let gain = L.xp + (L.first ? 20 + (perfect ? 10 : 0) : 0);
+  if (!L.first) gain = Math.round(gain / 2);
+  const acc = Math.round(L.total / (L.total + L.mistakes) * 100);
+  state.xp += gain;
+  state.daily = { date: today(), xp: dailyXP() + gain };
+  const rec = state.done[f.id] || { plays: 0, best: 0 };
+  rec.plays++; rec.best = Math.max(rec.best, acc); state.done[f.id] = rec;
+  save();
+  L.result = { titleUp: titleIdx(state.xp) > prev };
+  const unitDone = L.first && f.unit.lessons.every((_, li) => state.done[`u${f.ui}l${li}`]);
+  const allDone = L.first && FLAT.every(x => state.done[x.id]);
+  const goalHit = dailyXP() >= GOAL && dailyXP() - gain < GOAL;
+  justDone = f.id;
+
+  const notes = [];
+  if (L.newDay) notes.push(`<div class="note">🔥 ¡Racha de ${state.streak} ${state.streak === 1 ? 'día' : 'días'}!</div>`);
+  if (goalHit) notes.push('<div class="note">🎯 ¡Meta diaria cumplida!</div>');
+  if (unitDone) notes.push(`<div class="note">🏅 ¡Completaste la unidad "${esc(f.unit.title)}"!</div>`);
+  if (allDone) notes.push('<div class="note">🏆 ¡Terminaste todo el curso!</div>');
+  if (!L.first) notes.push('<div class="note">🔁 Práctica: los puntos de un repaso valen la mitad.</div>');
+  if (perfect) notes.push('<div class="note">✨ ¡Lección perfecta, sin errores!</div>');
+
+  $('#lbar').style.width = '100%';
+  $('#li').innerHTML = `<div class="result">${mascot('lg')}<h1>¡Lección completada!</h1><p class="sub">${esc(f.lesson.title)}</p>
+    <div class="rstats"><div class="rs y"><b>Puntos</b><span>⭐ +${gain}</span></div><div class="rs g"><b>Precisión</b><span>🎯 ${acc}%</span></div><div class="rs o"><b>Racha</b><span>🔥 ${streakNow()}</span></div></div>
+    <div class="notes">${notes.join('')}</div></div>`;
+  const lf = $('#lf'); lf.className = 'l-foot';
+  lf.innerHTML = '<div class="foot-in"><span class="spacer"></span><button class="btn green wide" data-act="finish">Continuar</button></div>';
+  Sound.play('win'); confetti(perfect ? 220 : 140); scrollTop();
+}
+
+function afterLesson() {
+  const up = L && L.result && L.result.titleUp;
+  closeLesson();
+  refreshAll();
+  setTimeout(() => { const n = document.querySelector('.node.cur') || document.querySelector('.node.just'); if (n) n.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, 80);
+  if (up) setTimeout(() => {
+    const T = TITLES[titleIdx(state.xp)];
+    Sound.play('levelup'); confetti(200);
+    openModal(`${mascot('')}<div class="bigtitle">${T.icon}</div><h3>¡Nuevo título!</h3><p>Ahora eres <b>${T.name}</b>. ¡Sigue así, ${esc(state.name)}!</p><div class="btns"><button class="btn green" data-act="closeModal">¡Genial!</button></div>`, 'center');
+  }, 350);
+  setTimeout(() => { justDone = null; }, 1500);
+}
+
+/* ---------- Acciones ---------- */
+const H = {
+  start() {
+    const v = $('#nameIn').value.trim();
+    if (!v) { const i = $('#nameIn'); i.style.animation = 'none'; void i.offsetWidth; i.style.animation = 'shake .4s'; i.focus(); Sound.play('wrong'); return; }
+    state.name = v.slice(0, 20); save(); Sound.play('win'); renderHome();
+  },
+  lesson(t) {
+    const g = +t.dataset.g;
+    if (g > curIdx()) { toast('Completa la lección anterior para desbloquear esta.'); Sound.play('wrong'); return; }
+    startLesson(g);
+  },
+  profile() { openModal('<button class="ib close" data-act="closeModal" aria-label="Cerrar">✕</button>' + profileHTML()); },
+  sound() { state.sound = !state.sound; save(); if (state.sound) Sound.play('pop'); refreshAll(); if ($('#overlay .prof')) { const m = $('#overlay .modal'); m.innerHTML = '<button class="ib close" data-act="closeModal" aria-label="Cerrar">✕</button>' + profileHTML(); } },
+  closeModal() { closeModal(); },
+  quit() { openModal('<h3>¿Salir de la lección?</h3><p>Perderás el avance de esta lección.</p><div class="btns"><button class="btn green" data-act="closeModal">Seguir aprendiendo</button><button class="btn ghost danger" data-act="exit">Salir</button></div>', 'center'); },
+  exit() { closeModal(); closeLesson(); refreshAll(); },
+  learnNext() { const n = L.f.lesson.learn.length; if (L.step < n - 1) { L.step++; showLearn(); } else { L.phase = 'ex'; showEx(); } },
+  skipLearn() { L.phase = 'ex'; showEx(); },
+  opt(t) { if (L.checked) return; Sound.play('tick'); L.sel = +t.dataset.i; document.querySelectorAll('.opt').forEach(b => b.classList.toggle('sel', b === t)); setCheck(true); },
+  place(t) { if (L.checked) return; Sound.play('tick'); L.placed.push(+t.dataset.i); renderOd(); },
+  unplace(t) { if (L.checked) return; Sound.play('tick'); const i = +t.dataset.i; L.placed = L.placed.filter(x => x !== i); renderOd(); },
+  check, next,
+  retry() { const f = L.g; closeLesson(); startLesson(f); },
+  finish() { afterLesson(); },
+  reset() {
+    openModal('<h3>¿Resetear tu progreso?</h3><p>Se borrarán tus puntos, tu racha, tus títulos y las lecciones completadas. Tu nombre se mantiene. Esta acción no se puede deshacer.</p><div class="btns"><button class="btn ghost" data-act="closeModal">Cancelar</button><button class="btn red" data-act="resetYes">Sí, resetear</button></div>', 'center');
+  },
+  resetYes() {
+    const keep = { name: state.name, sound: state.sound };
+    state = Object.assign(defaults(), keep); save(); justDone = null;
+    closeModal(); Sound.play('fail'); refreshAll(); toast('Progreso reiniciado. ¡A empezar de nuevo!');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+  editname() {
+    openModal(`<h3>Tu nombre</h3><input id="nameEdit" class="field" maxlength="20" value="${esc(state.name)}" autocomplete="off" aria-label="Nombre"><div class="btns"><button class="btn green" data-act="savename">Guardar</button><button class="btn ghost" data-act="closeModal">Cancelar</button></div>`);
+    setTimeout(() => { const i = $('#nameEdit'); if (i) { i.focus(); i.select(); } }, 60);
+  },
+  savename() { const v = $('#nameEdit').value.trim(); if (!v) return; state.name = v.slice(0, 20); save(); closeModal(); refreshAll(); toast('Nombre actualizado'); }
+};
+const NOPOP = ['check', 'opt', 'place', 'unplace', 'sound', 'start', 'resetYes'];
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]'); if (!t) return;
+  const a = t.dataset.act;
+  if (!NOPOP.includes(a)) Sound.play('pop');
+  if (H[a]) H[a](t, e);
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'blank' && L && !L.checked) { L.val = e.target.value; setCheck(L.val.trim().length > 0); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { if ($('#overlay')) closeModal(); return; }
+  if (e.repeat) return;
+  const t = e.target;
+  if (e.key === 'Enter') {
+    if (t.id === 'nameIn') { e.preventDefault(); H.start(); return; }
+    if (t.id === 'nameEdit') { e.preventDefault(); H.savename(); return; }
+    if ($('#overlay')) return;
+    if (L) { const b = document.querySelector('#lf .btn:not([disabled])'); if (b && t.tagName !== 'BUTTON') { e.preventDefault(); b.click(); } else if (b && t.tagName === 'BUTTON' && t.closest('#lf')) { /* el botón enfocado responde solo */ } else if (b && !$('#overlay')) { e.preventDefault(); b.click(); } }
+  }
+  if (L && !L.checked && /^[1-9]$/.test(e.key) && t.tagName !== 'INPUT') {
+    const o = document.querySelectorAll('.opt')[+e.key - 1]; if (o) o.click();
+  }
+});
+
+/* ---------- Inicio ---------- */
+render();
+</script>
+</body>
+</html>
