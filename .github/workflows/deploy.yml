@@ -24,6 +24,8 @@ jobs:
       - uses: actions/checkout@v7
 
       - uses: actions/configure-pages@v6
+        with:
+          enablement: true
 
       # Valida el empaquetador sin instalar nada: tools/build.mjs solo usa
       # módulos nativos de Node. Así un push con un bundle roto (por ejemplo
